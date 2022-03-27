@@ -10,34 +10,37 @@
 import { Debug, Is } from '@secjs/utils'
 import { EnvTypeENUM } from 'src/Enum/EnvTypeENUM'
 import { EnvContract } from 'src/Contracts/EnvContract'
+import { replaceEnvValues } from 'src/Utils/replaceEnvValues'
 
+/**
+ * Return the env value if found or the fallback defaultValue
+ *
+ * @param env
+ * @param defaultValue
+ */
 export function Env<EnvType = any>(
   env: string | EnvContract,
   defaultValue?: any,
 ): EnvType {
   const debug = new Debug(Env.name, 'api:environments')
 
-  if (Is.String(env)) {
-    const environment = process.env[env]
-
-    if (!environment) {
-      debug.log(`Variable ${env} not found`)
-
-      return defaultValue
-    }
-
-    return environment as any
-  }
-
-  let environment = process.env[env.name]
+  const environment = replaceEnvValues(
+    process.env[`${Is.String(env) ? env : env.name}`] as string,
+  )
 
   if (!environment) {
-    debug.log(`Variable ${env.name} not found`)
+    debug.log(`Variable ${env} not found`)
 
-    environment = defaultValue
+    return replaceEnvValues(defaultValue)
   }
 
-  switch (env.type) {
+  if (Is.String(env)) {
+    return environment
+  }
+
+  const envContract: EnvContract = env as EnvContract
+
+  switch (envContract.type) {
     case EnvTypeENUM.NUMBER:
       return parseInt(environment as string) as any
     case EnvTypeENUM.OBJECT:

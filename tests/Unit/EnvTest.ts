@@ -42,6 +42,14 @@ describe('\n EnvTest', () => {
     expect(Env('NO_EXIST', 'Hello World')).toBe('Hello World')
   })
 
+  it('should be able to set env values inside of other env values', async () => {
+    process.env.NODE_ENV = ''
+    resolveEnvFile()
+
+    expect(Env('ENV_IN_ENV')).toStrictEqual('10-true')
+    expect(Env({ name: 'ENV_IN_ENV_JSON', type: EnvTypeENUM.OBJECT })).toStrictEqual({ maintainers: { name: 'Paulo' } })
+  })
+
   afterAll(async () => {
     await new File(Path.noBuild().pwd('.env')).remove()
     await new File(Path.noBuild().pwd('.env.testing')).remove()
