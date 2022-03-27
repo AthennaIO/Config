@@ -1,6 +1,6 @@
 {
   "name": "@athenna/config",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -15,6 +15,8 @@
   },
   "keywords": [
     "nodejs",
+    "env",
+    "config",
     "dotenv",
     "athenna",
     "typescript"
