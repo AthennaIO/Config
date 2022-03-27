@@ -1,24 +1,26 @@
 {
-  "name": "@athenna/template",
+  "name": "@athenna/config",
   "version": "1.0.0",
   "description": "",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
-  "repository": "https://github.com/AthennaIO/Template.git",
-  "bugs": "https://github.com/AthennaIO/Template/issues",
-  "homepage": "https://github.com/AthennaIO/Template#readme",
+  "repository": "https://github.com/AthennaIO/Config.git",
+  "bugs": "https://github.com/AthennaIO/Config/issues",
+  "homepage": "https://github.com/AthennaIO/Config#readme",
   "scripts": {
     "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s . -o .",
     "test": "npm run lint:fix && NODE_TS=true NODE_ENV=testing jest --verbose",
-    "test:debug": "DEBUG=api:exceptions NODE_TS=true NODE_ENV=testing jest --verbose",
+    "test:debug": "DEBUG=api:* NODE_TS=true NODE_ENV=testing jest --verbose",
     "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix"
   },
   "keywords": [
     "nodejs",
+    "dotenv",
     "athenna",
     "typescript"
   ],
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/jest": "27.0.1",
     "@types/node": "14.17.0",
     "@typescript-eslint/eslint-plugin": "4.31.0",
@@ -151,6 +153,8 @@
     }
   },
   "dependencies": {
+    "@secjs/utils": "1.7.9",
+    "dotenv": "16.0.0",
     "reflect-metadata": "0.1.13",
     "tscpaths": "0.0.9"
   }

@@ -7,5 +7,9 @@
  * file that was distributed with this source code.
  */
 
-export * from './src/Env'
-export * from './src/Config'
+import { EnvTypeENUM } from 'src/Enum/EnvTypeENUM'
+
+export interface EnvContract {
+  name: string
+  type: EnvTypeENUM
+}

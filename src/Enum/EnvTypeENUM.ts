@@ -7,5 +7,9 @@
  * file that was distributed with this source code.
  */
 
-export * from './src/Env'
-export * from './src/Config'
+export enum EnvTypeENUM {
+  NUMBER = 'number',
+  STRING = 'string',
+  OBJECT = 'object',
+  BOOLEAN = 'boolean',
+}

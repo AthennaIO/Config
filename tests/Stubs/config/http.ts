@@ -7,5 +7,6 @@
  * file that was distributed with this source code.
  */
 
-export * from './src/Env'
-export * from './src/Config'
+export default {
+  http: 'test',
+}

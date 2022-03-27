@@ -1,18 +1,18 @@
-# Template 📔
+# Config ⚙️
 
-> Template for new projects
+> Cache and handle environment variables and config files in Athenna
 
 [![GitHub followers](https://img.shields.io/github/followers/athennaio.svg?style=social&label=Follow&maxAge=2592000)](https://github.com/athennaio?tab=followers)
-[![GitHub stars](https://img.shields.io/github/stars/athennaio/template.svg?style=social&label=Star&maxAge=2592000)](https://github.com/athennaio/template/stargazers/)
+[![GitHub stars](https://img.shields.io/github/stars/athennaio/config.svg?style=social&label=Star&maxAge=2592000)](https://github.com/athennaio/config/stargazers/)
 
 <p>
     <a href="https://www.buymeacoffee.com/athenna" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 </p>
 
 <p>
-  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/athennaio/orm?style=for-the-badge&logo=appveyor">
+  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/athennaio/config?style=for-the-badge&logo=appveyor">
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/athennaio/orm?style=for-the-badge&logo=appveyor">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/athennaio/config?style=for-the-badge&logo=appveyor">
 
   <img alt="License" src="https://img.shields.io/badge/license-MIT-brightgreen?style=for-the-badge&logo=appveyor">
 
