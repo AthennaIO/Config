@@ -12,10 +12,6 @@ import { Folder, Path } from '@secjs/utils'
 
 describe('\n ConfigTest', () => {
   beforeAll(async () => {
-    console.log(process.cwd())
-    console.log(Path.tests('Stubs/config'))
-    console.log(Path.noBuild().tests('Stubs/config'))
-
     new Folder(Path.tests('Stubs/config')).loadSync().copySync(Path.config())
   })
 
