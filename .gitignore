@@ -118,7 +118,10 @@ out
 .vscode
 
 # Environment variables file
+.env
+!tests/Stubs/.env
 .env.testing
+!tests/Stubs/.env.testing
 .env.production
 
 # Build files
