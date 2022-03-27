@@ -21,7 +21,7 @@
       "src/*": ["src/*"],
       "tests/*": ["tests/*"]
     },
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["*.ts", "**/*.ts"],
   "exclude": ["node_modules", "build", "dist", "tests"]
