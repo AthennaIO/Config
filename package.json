@@ -9,12 +9,8 @@
   "homepage": "https://github.com/AthennaIO/Config#readme",
   "scripts": {
     "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s . -o .",
-    "test": "npm run test:linux",
-    "test:debug": "npm run test:linux:debug",
-    "test:linux": "npm run lint:fix && NODE_TS=true NODE_ENV=testing jest --verbose",
-    "test:linux:debug": "DEBUG=api:* NODE_TS=true NODE_ENV=testing DEBUG=api:* jest --verbose",
-    "test:windows": "npm run lint:fix & set NODE_TS=true & set NODE_ENV=testing & jest --verbose",
-    "test:windows:debug": "set DEBUG=api:* & set NODE_TS=true & set NODE_ENV=testing & set DEBUG=api:* & jest --verbose",
+    "test": "npm run lint:fix && cross-env NODE_TS=true cross-env NODE_ENV=testing jest --verbose",
+    "test:debug": "npm run lint:fix && cross-env NODE_TS=true cross-env NODE_ENV=testing cross-env DEBUG=api:* jest --verbose",
     "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix"
   },
   "keywords": [
@@ -30,6 +26,7 @@
     "@typescript-eslint/eslint-plugin": "4.31.0",
     "@typescript-eslint/parser": "4.31.0",
     "commitizen": "4.2.4",
+    "cross-env": "7.0.3",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",

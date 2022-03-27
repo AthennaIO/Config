@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run tests
-        run: npm run test:linux
+        run: npm run test
 
   windows:
     runs-on: windows-latest
@@ -49,4 +49,4 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run tests
-        run: npm run test:windows
+        run: npm run test
