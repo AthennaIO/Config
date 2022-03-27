@@ -12,7 +12,8 @@ import { Folder, Path } from '@secjs/utils'
 
 describe('\n ConfigTest', () => {
   beforeAll(async () => {
-    await new Folder(Path.tests('Stubs/config')).loadSync().copy(Path.config())
+    console.log(Path.tests('Stubs/config'))
+    new Folder(Path.tests('Stubs/config')).loadSync().copySync(Path.config())
   })
 
   it('should be able to load all config files from config folder', async () => {
@@ -30,6 +31,6 @@ describe('\n ConfigTest', () => {
   })
 
   afterAll(async () => {
-    await new Folder(Path.config()).remove()
+    new Folder(Path.config()).removeSync()
   })
 })
