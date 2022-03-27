@@ -13,8 +13,8 @@
     "test:debug": "npm run test:linux:debug",
     "test:linux": "npm run lint:fix && NODE_TS=true NODE_ENV=testing jest --verbose",
     "test:linux:debug": "DEBUG=api:* NODE_TS=true NODE_ENV=testing DEBUG=api:* jest --verbose",
-    "test:windows": "npm run lint:fix && set NODE_TS=true & set NODE_ENV=testing & jest --verbose",
-    "test:windows:debug": "set DEBUG=api:* && set NODE_TS=true & set NODE_ENV=testing & set DEBUG=api:* & jest --verbose",
+    "test:windows": "npm run lint:fix & set NODE_TS=true & set NODE_ENV=testing & jest --verbose",
+    "test:windows:debug": "set DEBUG=api:* & set NODE_TS=true & set NODE_ENV=testing & set DEBUG=api:* & jest --verbose",
     "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix"
   },
   "keywords": [
