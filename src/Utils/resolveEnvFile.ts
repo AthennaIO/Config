@@ -10,6 +10,9 @@
 import * as dotenv from 'dotenv'
 import { Path, Debug } from '@secjs/utils'
 
+/**
+ * Resolve the env file according to NODE_ENV environment variable
+ */
 export function resolveEnvFile() {
   const debug = new Debug('Env', 'api:environments')
 
