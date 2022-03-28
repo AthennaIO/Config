@@ -7,21 +7,17 @@
  * file that was distributed with this source code.
  */
 
-import { Env } from '../Env'
-import { Config } from '../Config'
-import { EnvContract } from 'src/Contracts/EnvContract'
+import { Env as EnvFunction } from '../Env'
+import { Config as ConfigClass } from '../Config'
 
 const _global = global as any
 
-_global.Env = Env
-_global.Config = Config
+_global.Env = EnvFunction
+_global.Config = ConfigClass
 
 export {}
 
 declare global {
-  const Env: <EnvType = any>(
-    env: string | EnvContract,
-    defaultValue?: any,
-  ) => EnvType
-  const Config: Config
+  const Env: typeof EnvFunction
+  const Config: typeof ConfigClass
 }
