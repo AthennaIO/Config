@@ -19,7 +19,7 @@ export function resolveEnvFile() {
   const environment = process.env.NODE_ENV
   const configurations = { path: Path.noBuild().pwd('.env') }
 
-  if (environment && environment !== '') {
+  if (environment && environment !== '' && environment !== 'production') {
     configurations.path = Path.noBuild().pwd(`.env.${environment}`)
 
     debug.log(`Environment variables set using .env.${environment} file`)
