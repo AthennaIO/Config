@@ -8,47 +8,46 @@
  */
 
 import { Debug, Is } from '@secjs/utils'
-import { EnvTypeENUM } from 'src/Enum/EnvTypeENUM'
-import { EnvContract } from 'src/Contracts/EnvContract'
 import { replaceEnvValues } from 'src/Utils/replaceEnvValues'
 
 /**
  * Return the env value if found or the fallback defaultValue
  *
- * @param env
- * @param defaultValue
+ * @param env The environment variable name
+ * @param defaultValue The default value that Env will return if environment variable cannot be found
+ * @param autoCast Define that this environment variable should be auto cast using () reserved values
  */
 export function Env<EnvType = any>(
-  env: string | EnvContract,
+  env: string,
   defaultValue?: any,
+  autoCast = true,
 ): EnvType {
   const debug = new Debug(Env.name, 'api:environments')
 
-  const environment = replaceEnvValues(
-    process.env[`${Is.String(env) ? env : env.name}`] as string,
-  )
+  let environment = replaceEnvValues(process.env[env] as string, autoCast)
 
   if (!environment) {
     debug.log(`Variable ${env} not found`)
 
-    return replaceEnvValues(defaultValue)
+    return replaceEnvValues(defaultValue, autoCast) as any
   }
 
-  if (Is.String(env)) {
-    return environment
-  }
+  if (autoCast && environment.match(/\((.*?)\)/)) {
+    environment = environment.slice(1, -1)
 
-  const envContract: EnvContract = env as EnvContract
-
-  switch (envContract.type) {
-    case EnvTypeENUM.NUMBER:
-      return parseInt(environment as string) as any
-    case EnvTypeENUM.OBJECT:
-      return JSON.parse(environment as string)
-    case EnvTypeENUM.BOOLEAN:
+    if (Is.Boolean(environment)) {
       // eslint-disable-next-line eqeqeq
       return (environment == 'true') as any
-    default:
-      return environment as any
+    }
+
+    if (Is.Number(environment)) {
+      return parseInt(environment) as any
+    }
+
+    if (Is.Json(environment)) {
+      return JSON.parse(environment)
+    }
   }
+
+  return environment as any
 }

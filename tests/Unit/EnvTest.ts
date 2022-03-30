@@ -9,7 +9,6 @@
 
 import { Env } from '../../src/Env'
 import { File, Path } from '@secjs/utils'
-import { EnvTypeENUM } from '../../src/Enum/EnvTypeENUM'
 import { resolveEnvFile } from '../../src/Utils/resolveEnvFile'
 
 describe('\n EnvTest', () => {
@@ -33,9 +32,9 @@ describe('\n EnvTest', () => {
     process.env.NODE_ENV = ''
     resolveEnvFile()
 
-    expect(Env({ name: 'NUMBER_ENV', type: EnvTypeENUM.NUMBER })).toStrictEqual(10)
-    expect(Env({ name: 'BOOLEAN_ENV', type: EnvTypeENUM.BOOLEAN })).toStrictEqual(true)
-    expect(Env({ name: 'OBJECT_ENV', type: EnvTypeENUM.OBJECT })).toStrictEqual({ name: 'Paulo' })
+    expect(Env('NUMBER_ENV')).toStrictEqual(10)
+    expect(Env('BOOLEAN_ENV')).toStrictEqual(true)
+    expect(Env('OBJECT_ENV')).toStrictEqual({ name: 'Paulo' })
   })
 
   it('should be able to fallback to default values when the env does not exist', async () => {
@@ -47,7 +46,14 @@ describe('\n EnvTest', () => {
     resolveEnvFile()
 
     expect(Env('ENV_IN_ENV')).toStrictEqual('10-true')
-    expect(Env({ name: 'ENV_IN_ENV_JSON', type: EnvTypeENUM.OBJECT })).toStrictEqual({ maintainers: { name: 'Paulo' } })
+    expect(Env('ENV_IN_ENV_JSON')).toStrictEqual({ maintainers: { name: 'Paulo' } })
+  })
+
+  it('should be able to turn off the auto cast for specifics envs when needed', async () => {
+    process.env.NODE_ENV = ''
+    resolveEnvFile()
+
+    expect(Env('NUMBER_ENV', '10', false)).toStrictEqual('(10)')
   })
 
   afterAll(async () => {
