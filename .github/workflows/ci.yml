@@ -50,3 +50,5 @@ jobs:
         run: npm install
       - name: Run tests
         run: npm run test
+      - name: Test the compiler
+        run: npm run build

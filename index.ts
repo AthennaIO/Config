@@ -10,6 +10,4 @@
 export * from 'src/Env'
 export * from 'src/Config'
 
-export * from 'src/Enum/EnvTypeENUM'
 export * from 'src/Utils/resolveEnvFile'
-export * from 'src/Contracts/EnvContract'
