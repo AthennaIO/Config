@@ -15,7 +15,7 @@ import { Is } from '@secjs/utils'
  *
  * Example: TEST_ENV=${MY_ENV}_Hello -> Env('TEST_ENV') -> env_Hello
  */
-export function replaceEnvValues(environment: any) {
+export function replaceEnvValues(environment: any, autoCast = true): string {
   if (!Is.String(environment)) return environment
 
   const matches = environment.match(/\${([^}]+)}/g)
@@ -26,7 +26,13 @@ export function replaceEnvValues(environment: any) {
 
       match = match.replace('$', '\\$')
 
-      environment = environment.replace(new RegExp(match, 'g'), Env(key, ''))
+      let value = Env(key, '', autoCast)
+
+      if (Is.Object(value)) {
+        value = JSON.stringify(value)
+      }
+
+      environment = environment.replace(new RegExp(match, 'g'), value)
     }
   }
 
