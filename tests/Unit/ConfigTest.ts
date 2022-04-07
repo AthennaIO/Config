@@ -16,14 +16,14 @@ describe('\n ConfigTest', () => {
   })
 
   it('should be able to load all config files from config folder', async () => {
-    Config.load()
+    await Config.load()
 
     expect(Config.get('http.http')).toBe('test')
     expect(Config.get('database.database')).toBe('test')
   })
 
   it('should be able to fallback to default values when the config does not exist', async () => {
-    Config.load()
+    await Config.load()
 
     expect(Config.get('http.noExist', 'Hello World')).toBe('Hello World')
     expect(Config.get('noExistConfig.test', 'Hello World')).toBe('Hello World')
