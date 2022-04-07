@@ -26,11 +26,11 @@ export class Config {
    * Load all the files that are inside the configPath
    * @param configPath Default is the config path in the root of the project
    */
-  static load(configPath = Path.config()) {
+  static async load(configPath = Path.config()) {
     const configFolder = new Folder(configPath).loadSync()
 
     for (const file of configFolder.files) {
-      new SecConfig().safeLoad(file.path)
+      await new SecConfig().safeLoad(file.path)
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@athenna/config",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -156,7 +156,7 @@
     }
   },
   "dependencies": {
-    "@secjs/utils": "1.8.0",
+    "@secjs/utils": "1.8.2",
     "dotenv": "16.0.0",
     "reflect-metadata": "0.1.13",
     "tscpaths": "0.0.9"
