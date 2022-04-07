@@ -18,8 +18,14 @@ export class Config {
   static get<ConfigType = any>(
     key: string,
     defaultValue: any = undefined,
-  ): ConfigType | undefined {
-    return SecConfig.get(key, defaultValue)
+  ): ConfigType {
+    const config = SecConfig.get(key)
+
+    if (config) {
+      return config
+    }
+
+    return defaultValue
   }
 
   /**
