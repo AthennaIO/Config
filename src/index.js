@@ -58,9 +58,7 @@ export class Config {
   static async load(configPath = Path.config()) {
     const { files } = await new Folder(configPath).load()
 
-    const promises = files.map(file => {
-      return new SecConfig().safeLoad(file.path)
-    })
+    const promises = files.map(f => new SecConfig().safeLoad(f.path))
 
     await Promise.all(promises)
   }
