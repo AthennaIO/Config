@@ -7,7 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { Debug } from '@secjs/utils'
+import { Config as SecConfig, Debug, Folder, Path } from '@secjs/utils'
+
 import { EnvHelper } from '#src/Helpers/EnvHelper'
 
 export * from './Helpers/EnvHelper.js'
@@ -35,6 +36,38 @@ export function Env(env, defaultValue, autoCast = true) {
   return environment
 }
 
+export class Config {
+  /**
+   * Get the value from config file by key. If not
+   * found, defaultValue will be used.
+   *
+   * @param {string} key
+   * @param {any,undefined} defaultValue
+   * @return {any}
+   */
+  static get(key, defaultValue = undefined) {
+    return SecConfig.get(key, defaultValue)
+  }
+
+  /**
+   * Load all the files that are inside the path.
+   *
+   * @param {string} configPath
+   * @return {Promise<void>}
+   */
+  static async load(configPath = Path.config()) {
+    const { files } = await new Folder(configPath).load()
+
+    const promises = files.map(file => new SecConfig().safeLoad(file.path))
+
+    await Promise.all(promises)
+  }
+}
+
 if (!global.Env) {
   global.Env = Env
+}
+
+if (!global.Config) {
+  global.Config = Config
 }
