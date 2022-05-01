@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { pathToFileURL } from 'url'
 import { Config as SecConfig, Debug, Folder, Path } from '@secjs/utils'
 
 import { EnvHelper } from '#src/Helpers/EnvHelper'
@@ -60,7 +59,7 @@ export class Config {
     const { files } = await new Folder(configPath).load()
 
     const promises = files.map(file => {
-      return new SecConfig().safeLoad(pathToFileURL(file.path).href)
+      return new SecConfig().safeLoad(file.path)
     })
 
     await Promise.all(promises)
