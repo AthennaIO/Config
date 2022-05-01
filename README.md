@@ -27,7 +27,7 @@
 
 ## Contributing
 
-> If you want to contribute to this project, first read the [CONTRIBUTING.MD](https://github.com/AthennaIO/Template/blob/develop/CONTRIBUTING.md) file. It will be a pleasure to receive your help.
+> If you want to contribute to this project, first read the [CONTRIBUTING.MD](https://github.com/AthennaIO/Config/blob/develop/CONTRIBUTING.md) file. It will be a pleasure to receive your help.
 
 ---
 
