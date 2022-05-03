@@ -1,5 +1,5 @@
 {
-  "name": "@athennaio/config",
+  "name": "@athenna/config",
   "version": "1.0.9",
   "description": "Cache and handle environment variables and config files of Athenna.",
   "license": "MIT",
