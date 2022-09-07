@@ -27,6 +27,14 @@ test.group('ConfigTest', group => {
     assert.equal(Config.get('database.database'), 'test')
   })
 
+  test('should be able to get the full value of some config file', async ({ assert }) => {
+    await Config.load()
+
+    assert.deepEqual(Config.get('http'), {
+      http: 'test',
+    })
+  })
+
   test('should be able to fallback to default values when the config does not exist', async ({ assert }) => {
     await Config.load()
 

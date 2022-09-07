@@ -85,7 +85,10 @@ export class EnvHelper {
    */
   static resolveFile() {
     const environment = process.env.NODE_ENV
-    const configurations = { path: Path.pwd('.env') }
+    const configurations = {
+      path: Path.pwd('.env'),
+      override: this.isToOverrideEnvs(),
+    }
 
     if (environment && environment !== '' && environment !== 'production') {
       configurations.path = Path.pwd(`.env.${environment}`)
@@ -100,20 +103,21 @@ export class EnvHelper {
 
     if (result.error) {
       Debug.log('Any environment variable file found.', 'api:environments')
-
-      return
     }
+  }
 
-    if (result.parsed) {
-      /**
-       * Remap environment because of Jest vm.
-       * Ref: https://nodejs.org/api/vm.html
-       */
-      Object.keys(result.parsed).forEach(key => {
-        if (!result.parsed) return
-
-        process.env[key] = result.parsed[key]
-      })
-    }
+  /**
+   * Verify if envs preset in process.env should be override
+   * by envs that are set inside .env files.
+   *
+   * @return {""|boolean}
+   */
+  static isToOverrideEnvs() {
+    return (
+      process.env.OVERRIDE_ENV &&
+      (process.env.OVERRIDE_ENV === true ||
+        process.env.OVERRIDE_ENV === 'true' ||
+        process.env.OVERRIDE_ENV === '(true)')
+    )
   }
 }
