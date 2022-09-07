@@ -23,6 +23,29 @@ test.group('EnvTest', group => {
     await new File(Path.pwd('.env.testing')).remove()
   })
 
+  test('should not override pre set environment variables', async ({ assert }) => {
+    process.env.PRESET = 'true'
+    process.env.NODE_ENV = ''
+    EnvHelper.resolveFile()
+
+    process.env.NODE_ENV = 'testing'
+    EnvHelper.resolveFile()
+
+    assert.equal(Env('PRESET'), 'true')
+  })
+
+  test('should override pre set environment variables', async ({ assert }) => {
+    process.env.OVERRIDE_ENV = true
+    process.env.PRESET = 'true'
+    process.env.NODE_ENV = ''
+    EnvHelper.resolveFile()
+
+    process.env.NODE_ENV = 'testing'
+    EnvHelper.resolveFile()
+
+    assert.equal(Env('PRESET'), 'false')
+  })
+
   test('should be able to resolve more than one env files at same time', async ({ assert }) => {
     process.env.NODE_ENV = ''
     EnvHelper.resolveFile()
