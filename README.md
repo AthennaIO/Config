@@ -1,6 +1,6 @@
 # Config ⚙️
 
-> Cache and handle environment variables and config files in Athenna
+> Cache and handle environment variables and config files of Athenna.
 
 [![GitHub followers](https://img.shields.io/github/followers/athennaio.svg?style=social&label=Follow&maxAge=2592000)](https://github.com/athennaio?tab=followers)
 [![GitHub stars](https://img.shields.io/github/stars/athennaio/config.svg?style=social&label=Star&maxAge=2592000)](https://github.com/athennaio/config/stargazers/)
@@ -31,4 +31,12 @@
 
 ---
 
-Made with 🖤 by [Athenna Team](https://github.com/AthennaIO) :wave:
+<p align='center'>
+  With 💜 by <a href='https://github.com/AthennaIO'>Athenna community</a>
+</p>
+
+<p align='center'>
+  <a href='https://github.com/AthennaIO/Config/graphs/contributors'>
+    <img src='https://contrib.rocks/image?repo=AthennaIO/Config'/>
+  </a>
+</p>
