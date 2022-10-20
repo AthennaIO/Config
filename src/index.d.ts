@@ -41,6 +41,13 @@ export function Env(env: string, defaultValue?: any, autoCast?: boolean): any
 
 export class Config {
   /**
+   * Map structure to save all configuration files.
+   *
+   * @type {Map<string, any>}
+   */
+  static configs: Map<string, any>
+
+  /**
    * Get the value from config file by key. If not
    * found, defaultValue will be used.
    *
@@ -48,15 +55,34 @@ export class Config {
    * @param {any,undefined} defaultValue
    * @return {any}
    */
-  static get(key: string, defaultValue?: any): any
+  static get(key: string, defaultValue?: any): Promise<void>
 
   /**
-   * Load all the files that are inside the path.
+   * Load all configuration files in path.
    *
-   * @param {string} configPath
+   * @param {string} path
    * @return {Promise<void>}
    */
-  static load(configPath?: string): Promise<void>
+  static loadAll(path?: string): Promise<void>
+
+  /**
+   * Load the configuration file only if it has
+   * not been loaded yet.
+   *
+   * @param {string} path
+   * @param {number?} callNumber
+   * @return {Promise<void>}
+   */
+  static safeLoad(path, callNumber?: number): Promise<void>
+
+  /**
+   * Load the configuration file.
+   *
+   * @param {string} path
+   * @param {number?} callNumber
+   * @return {Promise<void>}
+   */
+  static load(path: string, callNumber?: number): Promise<void>
 }
 
 declare global {

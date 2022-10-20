@@ -1,12 +1,14 @@
 /**
- * @athenna/config
+ * @secjs/utils
  *
- * (c) João Lenon <lenon@athenna.io>
+ * (c) João Lenon <lenonSec7@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
+import { Config } from '#src/index'
+
 export default {
-  http: 'test',
+  value: Config.get('recursiveOne.value'),
 }

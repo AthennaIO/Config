@@ -7,8 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Config } from '#src/index'
-
 export default {
-  username: Config.get('app.name'),
+  name: 'Athenna',
+  env: Env('NODE_ENV', 'test'),
 }

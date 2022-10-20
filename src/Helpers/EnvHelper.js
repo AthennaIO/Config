@@ -8,7 +8,7 @@
  */
 
 import dotenv from 'dotenv'
-import { Debug, Is, Path } from '@secjs/utils'
+import { Is, Path } from '@athenna/common'
 
 import { Env } from '#src/index'
 
@@ -24,6 +24,10 @@ export class EnvHelper {
    * @return {string}
    */
   static setEnvInEnv(environment, autoCast) {
+    if (!environment) {
+      return undefined
+    }
+
     if (!Is.String(environment)) {
       return environment
     }
@@ -92,18 +96,9 @@ export class EnvHelper {
 
     if (environment && environment !== '' && environment !== 'production') {
       configurations.path = Path.pwd(`.env.${environment}`)
-
-      Debug.log(
-        `Environment variables set using .env.${environment} file.`,
-        'api:environments',
-      )
     }
 
-    const result = dotenv.config(configurations)
-
-    if (result.error) {
-      Debug.log('Any environment variable file found.', 'api:environments')
-    }
+    dotenv.config(configurations)
   }
 
   /**
