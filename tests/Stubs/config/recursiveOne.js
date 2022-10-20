@@ -10,5 +10,5 @@
 import { Config } from '#src/index'
 
 export default {
-  username: Config.get('app.name'),
+  value: Config.get('recursiveTwo.value'),
 }

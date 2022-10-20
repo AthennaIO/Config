@@ -7,36 +7,24 @@
  * file that was distributed with this source code.
  */
 
-import { Config as SecConfig, Debug, Folder, Path } from '@secjs/utils'
+import { parse } from 'node:path'
+import { File, Folder, Json, Module, Path } from '@athenna/common'
 
-import { EnvHelper } from '#src/Helpers/EnvHelper'
+import { Env } from '#src/Env/Env'
+import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
+import { ConfigNotNormalizedException } from '#src/Exceptions/ConfigNotNormalizedException'
 
+export * from './Env/Env.js'
 export * from './Helpers/EnvHelper.js'
 
-/**
- * Return the env value if found or the fallback defaultValue.
- *
- * @param {string} env
- * @param {any} [defaultValue]
- * @param {boolean} [autoCast]
- */
-export function Env(env, defaultValue, autoCast = true) {
-  const environment = EnvHelper.setEnvInEnv(process.env[env], autoCast)
-
-  if (!environment) {
-    Debug.log(`Variable ${env} not found.`, 'api:environments')
-
-    return EnvHelper.setEnvInEnv(defaultValue, autoCast)
-  }
-
-  if (autoCast) {
-    return EnvHelper.castEnv(environment)
-  }
-
-  return environment
-}
-
 export class Config {
+  /**
+   * Map structure to save all configuration files.
+   *
+   * @type {Map<string, any>}
+   */
+  static configs = new Map()
+
   /**
    * Get the value from config file by key. If not
    * found, defaultValue will be used.
@@ -46,21 +34,95 @@ export class Config {
    * @return {any}
    */
   static get(key, defaultValue = undefined) {
-    return SecConfig.get(key, defaultValue)
+    const [mainKey, ...keys] = key.split('.')
+
+    const config = this.configs.get(mainKey)
+
+    return Json.get(config, keys.join('.'), defaultValue)
   }
 
   /**
-   * Load all the files that are inside the path.
+   * Load all configuration files in path.
    *
-   * @param {string} configPath
+   * @param {string} path
    * @return {Promise<void>}
    */
-  static async load(configPath = Path.config()) {
-    const { files } = await new Folder(configPath).load()
+  static async loadAll(path = Path.config()) {
+    const { files } = await new Folder(path).load()
 
-    const promises = files.map(f => new SecConfig().safeLoad(f.path))
+    const promises = files.map(file => this.safeLoad(file.path))
 
     await Promise.all(promises)
+  }
+
+  /**
+   * Load the configuration file only if it has
+   * not been loaded yet.
+   *
+   * @param {string} path
+   * @param {number?} callNumber
+   * @return {Promise<void>}
+   */
+  static async safeLoad(path, callNumber) {
+    const { name } = parse(path)
+
+    if (this.configs.has(name)) {
+      return
+    }
+
+    return this.load(path, callNumber)
+  }
+
+  /**
+   * Load the configuration file.
+   *
+   * @param {string} path
+   * @param {number?} callNumber
+   * @return {Promise<void>}
+   */
+  static async load(path, callNumber = 0) {
+    const { dir, name, base, ext } = parse(path)
+
+    if (callNumber > 500) {
+      throw new RecursiveConfigException(path, name)
+    }
+
+    if (base.includes('.js.map') || base.includes('.d.ts')) {
+      return
+    }
+
+    const file = new File(path).loadSync()
+    const fileContent = file.getContentSync().toString()
+
+    if (
+      !fileContent.includes('export default') &&
+      !fileContent.includes('module.exports') &&
+      !fileContent.includes('exports.default')
+    ) {
+      throw new ConfigNotNormalizedException(path)
+    }
+
+    if (fileContent.includes('Config.get')) {
+      const matches = fileContent.match(/Config.get\(([^)]+)\)/g)
+
+      for (let match of matches) {
+        match = match.replace('Config.get', '').replace(/[(^)']/g, '')
+
+        const fileName = `${match.split('.')[0]}`
+        const fileBase = `${fileName}${ext}`
+        const filePath = `${dir}/${fileBase}`
+
+        await this.safeLoad(filePath, callNumber + 1)
+      }
+    }
+
+    /**
+     * Add random number to file import path so
+     * Node.js will not cache the imported file.
+     */
+    const versionedPath = `${file.href}?version=${Math.random()}`
+
+    this.configs.set(name, await Module.get(import(versionedPath)))
   }
 }
 
