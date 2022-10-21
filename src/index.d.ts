@@ -55,7 +55,7 @@ export class Config {
    * @param {any,undefined} defaultValue
    * @return {any}
    */
-  static get(key: string, defaultValue?: any): Promise<void>
+  static get(key: string, defaultValue?: any): any
 
   /**
    * Load all configuration files in path.
