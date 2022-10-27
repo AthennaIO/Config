@@ -27,7 +27,14 @@ test.group('ConfigTest', group => {
     await new Folder(Path.config()).remove()
   })
 
-  test('should be able to get full configurations values from Config class', ({ assert }) => {
+  test('should be able to get all configurations values from Config class', ({ assert }) => {
+    const configs = Config.get()
+
+    assert.deepEqual(configs.app, { name: 'Athenna', env: 'test' })
+    assert.deepEqual(configs.database, { username: 'Athenna' })
+  })
+
+  test('should be able to get full configurations values of one file from Config class', ({ assert }) => {
     const app = Config.get('app')
 
     assert.deepEqual(app, {
