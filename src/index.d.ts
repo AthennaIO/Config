@@ -51,11 +51,11 @@ export class Config {
    * Get the value from config file by key. If not
    * found, defaultValue will be used.
    *
-   * @param {string} key
-   * @param {any,undefined} defaultValue
+   * @param {string} [key]
+   * @param {any,undefined} [defaultValue]
    * @return {any}
    */
-  static get(key: string, defaultValue?: any): any
+  static get(key?: string, defaultValue?: any): any
 
   /**
    * Load all configuration files in path.
