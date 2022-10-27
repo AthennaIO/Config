@@ -24,10 +24,6 @@ export class EnvHelper {
    * @return {string}
    */
   static setEnvInEnv(environment, autoCast) {
-    if (!environment) {
-      return undefined
-    }
-
     if (!Is.String(environment)) {
       return environment
     }
@@ -56,9 +52,12 @@ export class EnvHelper {
   }
 
   /**
-   * Cast the environment variable if matches
-   * the cast reserved vars -> (). If the var
-   * doesnt match, returns the same variable value.
+   * Cast the environment variable if it values matches a
+   * number string, boolean string or json string. Also,
+   * if the variable has the reserved vars -> () enclosed
+   * it will be removed and returned as string. So the value
+   * (false) in .env is equals to 'false' but the value 10 is
+   * equals to number 10.
    *
    * @param {string} environment
    * @return {any}
@@ -67,15 +66,19 @@ export class EnvHelper {
     if (environment.match(/\((.*?)\)/)) {
       environment = environment.slice(1, -1)
 
-      /**
-       * Is.Json(environment) will be true if values
-       * are boolean string and also number string.
-       *
-       * JSON.parse also can cast this type of values.
-       */
-      if (Is.Json(environment)) {
-        return JSON.parse(environment)
-      }
+      return environment
+    }
+
+    if (/^-?\d+$/.test(environment)) {
+      return +environment
+    }
+
+    if (Is.Json(environment)) {
+      return JSON.parse(environment)
+    }
+
+    if (environment === 'true' || environment === 'false') {
+      return environment === 'true'
     }
 
     return environment
@@ -108,11 +111,16 @@ export class EnvHelper {
    * @return {""|boolean}
    */
   static isToOverrideEnvs() {
-    return (
-      process.env.OVERRIDE_ENV &&
-      (process.env.OVERRIDE_ENV === true ||
-        process.env.OVERRIDE_ENV === 'true' ||
-        process.env.OVERRIDE_ENV === '(true)')
-    )
+    return this.isEnvTrue(process.env.OVERRIDE_ENV)
+  }
+
+  /**
+   * Verify if the env variable is true, 'true' or '(true)'.
+   *
+   * @param {string} env
+   * @return {boolean}
+   */
+  static isEnvTrue(env) {
+    return env && (env === true || env === 'true' || env === '(true)')
   }
 }

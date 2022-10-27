@@ -31,7 +31,7 @@ test.group('EnvTest', group => {
     process.env.NODE_ENV = 'testing'
     EnvHelper.resolveFile()
 
-    assert.equal(Env('PRESET'), 'true')
+    assert.equal(Env('PRESET'), true)
   })
 
   test('should override pre set environment variables', async ({ assert }) => {
@@ -43,7 +43,7 @@ test.group('EnvTest', group => {
     process.env.NODE_ENV = 'testing'
     EnvHelper.resolveFile()
 
-    assert.equal(Env('PRESET'), 'false')
+    assert.equal(Env('PRESET'), false)
   })
 
   test('should be able to resolve more than one env files at same time', async ({ assert }) => {
@@ -62,12 +62,15 @@ test.group('EnvTest', group => {
     EnvHelper.resolveFile()
 
     assert.strictEqual(Env('NUMBER_ENV'), 10)
+    assert.strictEqual(Env('STRING_NUMBER_ENV'), '10')
     assert.strictEqual(Env('BOOLEAN_ENV'), true)
+    assert.strictEqual(Env('STRING_BOOLEAN_ENV'), 'true')
     assert.deepEqual(Env('OBJECT_ENV'), { name: 'Paulo' })
+    assert.deepEqual(Env('STRING_OBJECT_ENV'), `{"name":"Paulo"}`)
   })
 
   test('should be able to fallback to default values when the env does not exist', async ({ assert }) => {
-    assert.equal(Env('NO_EXIST', 'Hello World'), 'Hello World')
+    assert.deepEqual(Env('NO_EXIST', false), false)
   })
 
   test('should be able to set env values inside of other env values', async ({ assert }) => {
@@ -76,13 +79,15 @@ test.group('EnvTest', group => {
 
     assert.equal(Env('ENV_IN_ENV'), '10-true')
     assert.deepEqual(Env('ENV_IN_ENV_JSON'), { maintainers: { name: 'Paulo' } })
+    assert.deepEqual(Env('STRING_ENV_IN_ENV_JSON'), `{ "maintainers": {"name":"Paulo"} }`)
   })
 
   test('should be able to turn off the auto cast for specifics envs when needed', async ({ assert }) => {
     process.env.NODE_ENV = ''
     EnvHelper.resolveFile()
 
-    assert.equal(Env('NUMBER_ENV', '10', false), '(10)')
+    assert.equal(Env('NUMBER_ENV', '10', false), '10')
+    assert.equal(Env('STRING_NUMBER_ENV', '(10)', false), '(10)')
   })
 
   test('should be able to use Env without any .env file', async ({ assert }) => {

@@ -29,11 +29,21 @@ export class Config {
    * Get the value from config file by key. If not
    * found, defaultValue will be used.
    *
-   * @param {string} key
-   * @param {any,undefined} defaultValue
+   * @param {string} [key]
+   * @param {any,undefined} [defaultValue]
    * @return {any}
    */
   static get(key, defaultValue = undefined) {
+    if (!key) {
+      const config = {}
+
+      for (const [key, value] of this.configs.entries()) {
+        config[key] = value
+      }
+
+      return config
+    }
+
     const [mainKey, ...keys] = key.split('.')
 
     const config = this.configs.get(mainKey)
