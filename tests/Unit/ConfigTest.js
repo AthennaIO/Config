@@ -58,6 +58,7 @@ test.group('ConfigTest', group => {
     assert.isTrue(Config.existsAll('app.name', 'app.env'))
     assert.isTrue(Config.is('app.name', 'Athenna'))
     assert.isTrue(Config.is('app.name', 'Wrong', 'WrongAgain', 'Athenna'))
+    assert.isTrue(Config.is('app.name', ['Wrong', 'WrongAgain', 'Athenna']))
     assert.isFalse(Config.notExists('app.name'))
     assert.isFalse(Config.notExistsAll('app.name', 'app.env'))
     assert.isFalse(Config.isNot('app.name', 'Athenna'))

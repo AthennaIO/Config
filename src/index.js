@@ -9,7 +9,7 @@
 
 import lodash from 'lodash'
 import { parse } from 'node:path'
-import { File, Folder, Json, Module, Path } from '@athenna/common'
+import { File, Folder, Is, Json, Module, Path } from '@athenna/common'
 
 import { Env } from '#src/Env/Env'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
@@ -35,6 +35,7 @@ export class Config {
    */
   static is(key, ...values) {
     let is = false
+    values = Is.Array(values[0]) ? values[0] : values
 
     for (const value of values) {
       if (this.get(key) === value) {
@@ -85,6 +86,7 @@ export class Config {
    */
   static existsAll(...keys) {
     let existsAll = true
+    keys = Is.Array(keys[0]) ? keys[0] : keys
 
     for (const key of keys) {
       if (this.notExists(key)) {
