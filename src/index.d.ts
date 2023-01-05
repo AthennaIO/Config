@@ -48,6 +48,79 @@ export class Config {
   static configs: Map<string, any>
 
   /**
+   * Verify if configuration key has the same value.
+   *
+   * @param {string} key
+   * @param {any|any[]} values
+   * @return {boolean}
+   */
+  static is(key: string, values: any | any[]): boolean
+  static is(key: string, ...values: any[]): boolean
+
+  /**
+   * Verify if configuration key does not have the same value.
+   *
+   * @param {string} key
+   * @param {any|any[]} values
+   * @return {boolean}
+   */
+  static isNot(key: string, values: any | any[]): boolean
+  static isNot(key: string, ...values: any[]): boolean
+
+  /**
+   * Verify if configuration key exists.
+   *
+   * @param {string} key
+   * @return {boolean}
+   */
+  static exists(key: string): boolean
+
+  /**
+   * Verify if configuration key does not exist.
+   *
+   * @param {string} key
+   * @return {boolean}
+   */
+  static notExists(key: string): boolean
+
+  /**
+   * Verify if configuration keys exists.
+   *
+   * @param {string[]} keys
+   * @return {boolean}
+   */
+  static existsAll(keys: string): boolean
+  static existsAll(keys: string[]): boolean
+  static existsAll(...keys: string[]): boolean
+
+  /**
+   * Verify if configuration keys not exists.
+   *
+   * @param {string[]} keys
+   * @return {boolean}
+   */
+  static notExistsAll(keys: string): boolean
+  static notExistsAll(keys: string[]): boolean
+  static notExistsAll(...keys: string[]): boolean
+
+  /**
+   * Set a value in the configuration key.
+   *
+   * @param {string} key
+   * @param {any|any[]} value
+   * @return {typeof Config}
+   */
+  static set(key: string, value: any | any[]): typeof Config
+
+  /**
+   * Delete the configuration key.
+   *
+   * @param {string} key
+   * @return {typeof Config}
+   */
+  static delete(key: string): typeof Config
+
+  /**
    * Get the value from config file by key. If not
    * found, defaultValue will be used.
    *
@@ -97,21 +170,102 @@ declare global {
 
   export class Config {
     /**
+     * Map structure to save all configuration files.
+     *
+     * @type {Map<string, any>}
+     */
+    static configs: Map<string, any>
+
+    /**
+     * Verify if configuration key has the same value.
+     *
+     * @param {string} key
+     * @param {any|any[]} values
+     * @return {boolean}
+     */
+    static is(key: string, values: any | any[]): boolean
+    static is(key: string, ...values: any[]): boolean
+
+    /**
+     * Verify if configuration key does not have the same value.
+     *
+     * @param {string} key
+     * @param {any|any[]} values
+     * @return {boolean}
+     */
+    static isNot(key: string, values: any | any[]): boolean
+    static isNot(key: string, ...values: any[]): boolean
+
+    /**
+     * Verify if configuration key exists.
+     *
+     * @param {string} key
+     * @return {boolean}
+     */
+    static exists(key: string): boolean
+
+    /**
+     * Verify if configuration key does not exist.
+     *
+     * @param {string} key
+     * @return {boolean}
+     */
+    static notExists(key: string): boolean
+
+
+
+    /**
+     * Set a value in the configuration key.
+     *
+     * @param {string} key
+     * @param {any|any[]} value
+     * @return {typeof Config}
+     */
+    static set(key: string, value: any | any[]): typeof Config
+
+    /**
+     * Delete the configuration key.
+     *
+     * @param {string} key
+     * @return {typeof Config}
+     */
+    static delete(key: string): typeof Config
+
+    /**
      * Get the value from config file by key. If not
      * found, defaultValue will be used.
      *
-     * @param {string} key
-     * @param {any,undefined} defaultValue
+     * @param {string} [key]
+     * @param {any,undefined} [defaultValue]
      * @return {any}
      */
-    static get(key: string, defaultValue?: any): any
+    static get(key?: string, defaultValue?: any): any
 
     /**
-     * Load all the files that are inside the path.
+     * Load all configuration files in path.
      *
-     * @param {string} configPath
+     * @param {string} path
      * @return {Promise<void>}
      */
-    static load(configPath?: string): Promise<void>
+    static loadAll(path?: string): Promise<void>
+
+    /**
+     * Load the configuration file only if it has
+     * not been loaded yet.
+     *
+     * @param {string} path
+     * @param {number?} callNumber
+     * @return {Promise<void>}
+     */
+    static safeLoad(path, callNumber?: number): Promise<void>
+
+    /**
+     * Load the configuration file.
+     *
+     * @param {string} path
+     * @param {number?} callNumber
+     * @return {Promise<void>}
+     */
+    static load(path: string, callNumber?: number): Promise<void>
   }
 }

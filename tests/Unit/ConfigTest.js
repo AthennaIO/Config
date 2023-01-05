@@ -53,6 +53,79 @@ test.group('ConfigTest', group => {
     assert.equal(Config.get('database.username'), 'Athenna')
   })
 
+  test('should be able to verify if configurations exists and if has the specified values', ({ assert }) => {
+    assert.isTrue(Config.exists('app.name'))
+    assert.isTrue(Config.existsAll('app.name', 'app.env'))
+    assert.isTrue(Config.is('app.name', 'Athenna'))
+    assert.isTrue(Config.is('app.name', 'Wrong', 'WrongAgain', 'Athenna'))
+    assert.isFalse(Config.notExists('app.name'))
+    assert.isFalse(Config.notExistsAll('app.name', 'app.env'))
+    assert.isFalse(Config.isNot('app.name', 'Athenna'))
+    assert.isFalse(Config.isNot('app.name', 'Wrong', 'WrongAgain', 'Athenna'))
+
+    assert.isFalse(Config.exists('notFound'))
+    assert.isFalse(Config.exists('app.notFound'))
+    assert.isFalse(Config.exists('app.name.notFound'))
+    assert.isFalse(Config.existsAll(['app.name.notFound1', 'app.name.notFound2']))
+    assert.isTrue(Config.notExists('notFound'))
+    assert.isTrue(Config.notExists('app.notFound'))
+    assert.isTrue(Config.notExists('app.name.notFound'))
+    assert.isTrue(Config.notExistsAll(['app.name.notFound1', 'app.name.notFound2']))
+
+    assert.isFalse(Config.is('notFound', 'Athenna'))
+    assert.isFalse(Config.is('app.name', 'Hello'))
+    assert.isTrue(Config.isNot('notFound', 'Athenna'))
+    assert.isTrue(Config.isNot('app.name', 'Hello'))
+  })
+
+  test('should be able to set values in configurations', ({ assert }) => {
+    const mainConfig = Config.get('app')
+
+    Config.set('app.name.mainName', 'Athenna')
+    Config.set('app.name.subName', 'Framework')
+
+    assert.deepEqual(Config.get('app'), {
+      name: {
+        mainName: 'Athenna',
+        subName: 'Framework',
+      },
+      env: 'test',
+    })
+
+    Config.set('app', { hello: 'world' })
+    Config.set('new', { hello: 'world' })
+    Config.set('client.url', 'http://localhost:1335')
+
+    assert.deepEqual(Config.get('app'), { hello: 'world' })
+    assert.deepEqual(Config.get('new'), { hello: 'world' })
+    assert.deepEqual(Config.get('client.url'), 'http://localhost:1335')
+
+    Config.set('app', mainConfig)
+  })
+
+  test('should be able to delete values from configurations', ({ assert }) => {
+    Config.delete('notFound')
+
+    const mainConfig = Config.get('app')
+
+    assert.isTrue(Config.delete('app').notExistsAll('app.name', 'app.env'))
+
+    Config.set('app', mainConfig)
+
+    assert.isTrue(Config.delete('app.name').notExists('app.name'))
+    assert.isTrue(Config.exists('app.env'))
+
+    Config.set('app.name.mainName', 'Athenna')
+    Config.set('app.name.subName', 'Framework')
+
+    Config.delete('app.name.mainName')
+
+    assert.isTrue(Config.exists('app.name.subName'))
+    assert.isTrue(Config.existsAll('app.name', 'app.env', 'app.name.subName'))
+
+    Config.set('app', mainConfig)
+  })
+
   test('should throw an error when loading a file that is trying to use Config.get() to get information from other config file but this config file is trying to use Config.get() to this same file', async ({
     assert,
   }) => {
