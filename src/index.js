@@ -7,8 +7,9 @@
  * file that was distributed with this source code.
  */
 
+import lodash from 'lodash'
 import { parse } from 'node:path'
-import { File, Folder, Json, Module, Path } from '@athenna/common'
+import { File, Folder, Is, Json, Module, Path } from '@athenna/common'
 
 import { Env } from '#src/Env/Env'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
@@ -24,6 +25,139 @@ export class Config {
    * @type {Map<string, any>}
    */
   static configs = new Map()
+
+  /**
+   * Verify if configuration key has the same value.
+   *
+   * @param {string} key
+   * @param {any|any[]} values
+   * @return {boolean}
+   */
+  static is(key, ...values) {
+    let is = false
+    values = Is.Array(values[0]) ? values[0] : values
+
+    for (const value of values) {
+      if (this.get(key) === value) {
+        is = true
+        break
+      }
+    }
+
+    return is
+  }
+
+  /**
+   * Verify if configuration key does not have the same value.
+   *
+   * @param {string} key
+   * @param {any|any[]} values
+   * @return {boolean}
+   */
+  static isNot(key, ...values) {
+    return !this.is(key, ...values)
+  }
+
+  /**
+   * Verify if configuration key exists.
+   *
+   * @param {string} key
+   * @return {boolean}
+   */
+  static exists(key) {
+    return !!this.get(key)
+  }
+
+  /**
+   * Verify if configuration key does not exist.
+   *
+   * @param {string} key
+   * @return {boolean}
+   */
+  static notExists(key) {
+    return !this.exists(key)
+  }
+
+  /**
+   * Verify if configuration keys exists.
+   *
+   * @param {string[]} keys
+   * @return {boolean}
+   */
+  static existsAll(...keys) {
+    let existsAll = true
+    keys = Is.Array(keys[0]) ? keys[0] : keys
+
+    for (const key of keys) {
+      if (this.notExists(key)) {
+        existsAll = false
+
+        break
+      }
+    }
+
+    return existsAll
+  }
+
+  /**
+   * Verify if configuration keys not exists.
+   *
+   * @param {string[]} keys
+   * @return {boolean}
+   */
+  static notExistsAll(...keys) {
+    return !this.existsAll(...keys)
+  }
+
+  /**
+   * Set a value in the configuration key.
+   *
+   * @param {string} key
+   * @param {any|any[]} value
+   * @return {typeof Config}
+   */
+  static set(key, value) {
+    value = Json.copy(value)
+
+    const [mainKey, ...keys] = key.split('.')
+
+    if (key === mainKey) {
+      this.configs.set(key, value)
+
+      return this
+    }
+
+    const config = this.configs.get(mainKey) || {}
+    this.configs.set(mainKey, lodash.set(config, keys.join('.'), value))
+
+    return this
+  }
+
+  /**
+   * Delete the configuration key.
+   *
+   * @param {string} key
+   * @return {typeof Config}
+   */
+  static delete(key) {
+    if (this.notExists(key)) {
+      return this
+    }
+
+    const [mainKey, ...keys] = key.split('.')
+
+    if (key === mainKey) {
+      this.configs.delete(key)
+
+      return this
+    }
+
+    const config = this.configs.get(mainKey)
+    lodash.unset(config, keys.join('.'))
+    this.configs.set(mainKey, config)
+
+    return this
+  }
 
   /**
    * Get the value from config file by key. If not
@@ -48,7 +182,7 @@ export class Config {
 
     const config = this.configs.get(mainKey)
 
-    return Json.get(config, keys.join('.'), defaultValue)
+    return Json.copy(Json.get(config, keys.join('.'), defaultValue))
   }
 
   /**
