@@ -143,9 +143,10 @@ export class Config {
    * Load all configuration files in path.
    *
    * @param {string} path
+   * @param {boolean} safe
    * @return {Promise<void>}
    */
-  static loadAll(path?: string): Promise<void>
+  static loadAll(path?: string, safe?: boolean): Promise<void>
 
   /**
    * Load the configuration file only if it has
@@ -252,9 +253,10 @@ declare global {
      * Load all configuration files in path.
      *
      * @param {string} path
+     * @param {boolean} safe
      * @return {Promise<void>}
      */
-    static loadAll(path?: string): Promise<void>
+    static loadAll(path?: string, safe?: boolean): Promise<void>
 
     /**
      * Load the configuration file only if it has
