@@ -189,12 +189,15 @@ export class Config {
    * Load all configuration files in path.
    *
    * @param {string} path
+   * @param {boolean} safe
    * @return {Promise<void>}
    */
-  static async loadAll(path = Path.config()) {
+  static async loadAll(path = Path.config(), safe = false) {
     const { files } = await new Folder(path).load()
 
-    const promises = files.map(file => this.safeLoad(file.path))
+    const promises = files.map(file =>
+      safe ? this.safeLoad(file.path) : this.load(file.path),
+    )
 
     await Promise.all(promises)
   }
