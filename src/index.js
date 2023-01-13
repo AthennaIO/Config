@@ -253,7 +253,7 @@ export class Config {
       const matches = fileContent.match(/Config.get\(([^)]+)\)/g)
 
       for (let match of matches) {
-        match = match.replace('Config.get', '').replace(/[(^)']/g, '')
+        match = match.replace('Config.get', '').replace(/[(^)'"]/g, '')
 
         const fileName = `${match.split('.')[0]}`
         const fileBase = `${fileName}${ext}`

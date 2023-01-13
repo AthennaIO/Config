@@ -10,5 +10,7 @@
 import { Config } from '#src/index'
 
 export default {
-  username: Config.get('app.name'),
+  // eslint-disable-next-line prettier/prettier
+  username: Config.get("app.name"),
+  env: Config.get('app.env'),
 }

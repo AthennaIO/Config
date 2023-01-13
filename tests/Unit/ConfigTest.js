@@ -31,7 +31,7 @@ test.group('ConfigTest', group => {
     const configs = Config.get()
 
     assert.deepEqual(configs.app, { name: 'Athenna', env: 'test' })
-    assert.deepEqual(configs.database, { username: 'Athenna' })
+    assert.deepEqual(configs.database, { username: 'Athenna', env: 'test' })
   })
 
   test('should be able to get full configurations values of one file from Config class', ({ assert }) => {
