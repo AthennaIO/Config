@@ -46,7 +46,7 @@ export class EnvHelper {
  * @param {any} [defaultValue]
  * @param {boolean} [autoCast]
  */
-export function Env(env: string, defaultValue?: any, autoCast?: boolean): any
+export function Env<T = any>(env: string, defaultValue?: any, autoCast?: boolean): T
 
 export class Config {
   /**
@@ -137,7 +137,7 @@ export class Config {
    * @param {any,undefined} [defaultValue]
    * @return {any}
    */
-  static get(key?: string, defaultValue?: any): any
+  static get<T = any>(key?: string, defaultValue?: any): T
 
   /**
    * Load all configuration files in path.
@@ -176,7 +176,7 @@ declare global {
    * @param {any} [defaultValue]
    * @param {boolean} [autoCast]
    */
-  export function Env(env: string, defaultValue?: any, autoCast?: boolean): any
+  export function Env<T = any>(env: string, defaultValue?: any, autoCast?: boolean): T
 
   export class Config {
     /**
@@ -247,7 +247,7 @@ declare global {
      * @param {any,undefined} [defaultValue]
      * @return {any}
      */
-    static get(key?: string, defaultValue?: any): any
+    static get<T = any>(key?: string, defaultValue?: any): T
 
     /**
      * Load all configuration files in path.
