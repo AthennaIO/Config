@@ -8,10 +8,12 @@
  */
 
 import lodash from 'lodash'
+import check from 'syntax-error'
 import { parse } from 'node:path'
 import { File, Folder, Is, Json, Module, Path } from '@athenna/common'
 
 import { Env } from '#src/Env/Env'
+import { ConfigSyntaxException } from '#src/Exceptions/ConfigSyntaxException'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
 import { ConfigNotNormalizedException } from '#src/Exceptions/ConfigNotNormalizedException'
 
@@ -240,6 +242,13 @@ export class Config {
 
     const file = new File(path).loadSync()
     const fileContent = file.getContentSync().toString()
+    const syntaxErr = check(fileContent, file.href, {
+      sourceType: 'module',
+    })
+
+    if (syntaxErr) {
+      throw new ConfigSyntaxException(syntaxErr, file.base)
+    }
 
     if (
       !fileContent.includes('export default') &&
