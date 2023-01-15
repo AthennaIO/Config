@@ -12,6 +12,7 @@ import { test } from '@japa/runner'
 import { File, Folder, Path } from '@athenna/common'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
 import { ConfigNotNormalizedException } from '#src/Exceptions/ConfigNotNormalizedException'
+import { ConfigSyntaxException } from '#src/Exceptions/ConfigSyntaxException'
 
 test.group('ConfigTest', group => {
   group.setup(async () => {
@@ -24,7 +25,8 @@ test.group('ConfigTest', group => {
   })
 
   group.teardown(async () => {
-    await new Folder(Path.config()).remove()
+    await Folder.safeRemove(Path.config())
+    await File.safeRemove(Path.stubs('syntaxError.js'))
   })
 
   test('should be able to get all configurations values from Config class', ({ assert }) => {
@@ -159,5 +161,11 @@ test.group('ConfigTest', group => {
     await Config.safeLoad(Path.config('database.js'))
 
     assert.equal(Config.get('app.env'), 'example')
+  })
+
+  test('should be able to check and capture syntax errors inside config files', async ({ assert }) => {
+    await new File(Path.stubs('syntaxError.js.template')).copy(Path.stubs('syntaxError.js'))
+
+    await assert.rejects(() => Config.load(Path.stubs('syntaxError.js')), ConfigSyntaxException)
   })
 })
