@@ -1,5 +1,5 @@
 /**
- * @athenna/config
+ * @athenna/Config
  *
  * (c) João Lenon <lenonSec7@gmail.com>
  *
@@ -7,7 +7,8 @@
  * file that was distributed with this source code.
  */
 
+import { Config } from '#src/index'
+
 export default {
-  name: 'Athenna',
-  env: Env('NODE_ENV', 'test'),
+  value: Config.get('recursiveTwo.value'),
 }

@@ -1,5 +1,5 @@
 /**
- * @athenna/config
+ * @athenna/Config
  *
  * (c) João Lenon <lenonSec7@gmail.com>
  *

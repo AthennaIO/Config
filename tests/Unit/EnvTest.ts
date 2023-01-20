@@ -1,5 +1,5 @@
 /**
- * @athenna/config
+ * @athenna/Config
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -35,7 +35,7 @@ test.group('EnvTest', group => {
   })
 
   test('should override pre set environment variables', async ({ assert }) => {
-    process.env.OVERRIDE_ENV = true
+    process.env.OVERRIDE_ENV = 'true'
     process.env.PRESET = 'true'
     process.env.NODE_ENV = ''
     EnvHelper.resolveFile()

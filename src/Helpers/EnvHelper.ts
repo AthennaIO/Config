@@ -1,5 +1,5 @@
 /**
- * @athenna/config
+ * @athenna/Config
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -9,8 +9,9 @@
 
 import dotenv from 'dotenv'
 
-import { Env } from '#src/index'
 import { Is, Path } from '@athenna/common'
+
+import { Env } from '#src/index'
 
 export class EnvHelper {
   /**
@@ -18,12 +19,8 @@ export class EnvHelper {
    * environment values.
    *
    * Example: TEST_ENV=${MY_ENV}_Hello -> Env('TEST_ENV') -> env_Hello
-   *
-   * @param {any} environment
-   * @param {boolean} autoCast
-   * @return {string}
    */
-  static setEnvInEnv(environment, autoCast) {
+  public static setEnvInEnv(environment: any, autoCast: boolean): string {
     if (!Is.String(environment)) {
       return environment
     }
@@ -58,11 +55,8 @@ export class EnvHelper {
    * it will be removed and returned as string. So the value
    * (false) in .env is equals to 'false' but the value 10 is
    * equals to number 10.
-   *
-   * @param {string} environment
-   * @return {any}
    */
-  static castEnv(environment) {
+  public static castEnv(environment: string): any {
     if (environment.match(/\((.*?)\)/)) {
       environment = environment.slice(1, -1)
 
@@ -87,10 +81,8 @@ export class EnvHelper {
   /**
    * Resolve the env file according to NODE_ENV
    * environment variable.
-   *
-   * @return {void}
    */
-  static resolveFile() {
+  public static resolveFile(): void {
     const environment = process.env.NODE_ENV
     const configurations = {
       path: Path.pwd('.env'),
@@ -105,22 +97,27 @@ export class EnvHelper {
   }
 
   /**
+   * Resolve some env file path.
+   */
+  public static resolveFilePath(
+    path = Path.pwd('.env'),
+    override = this.isToOverrideEnvs(),
+  ): void {
+    dotenv.config({ path, override })
+  }
+
+  /**
    * Verify if envs preset in process.env should be override
    * by envs that are set inside .env files.
-   *
-   * @return {""|boolean}
    */
-  static isToOverrideEnvs() {
+  static isToOverrideEnvs(): boolean {
     return this.isEnvTrue(process.env.OVERRIDE_ENV)
   }
 
   /**
    * Verify if the env variable is true, 'true' or '(true)'.
-   *
-   * @param {string} env
-   * @return {boolean}
    */
-  static isEnvTrue(env) {
-    return env && (env === true || env === 'true' || env === '(true)')
+  static isEnvTrue(env: string): boolean {
+    return env && (env === 'true' || env === '(true)')
   }
 }

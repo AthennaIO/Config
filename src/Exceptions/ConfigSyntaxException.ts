@@ -1,5 +1,5 @@
 /**
- * @athenna/config
+ * @athenna/Config
  *
  * (c) João Lenon <lenon@athenna.io>
  *
@@ -12,12 +12,8 @@ import { Exception } from '@athenna/common'
 export class ConfigSyntaxException extends Exception {
   /**
    * Creates a new instance of ConfigSyntaxException.
-   *
-   * @param {any} error
-   * @param {string} fileBase
-   * @return {ConfigSyntaxException}
    */
-  constructor(error, fileBase) {
+  public constructor(error: any, fileBase: string) {
     // eslint-disable-next-line no-unused-vars
     const [_, href, stringErr] = error.annotated.split('\n')
     const content = `Syntax error found at ({yellow, bold} ${fileBase}:${error.line}) configuration file.`

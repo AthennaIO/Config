@@ -1,5 +1,5 @@
 /**
- * @athenna/config
+ * @athenna/Config
  *
  * (c) João Lenon <lenonSec7@gmail.com>
  *
@@ -10,5 +10,7 @@
 import { Config } from '#src/index'
 
 export default {
-  value: Config.get('recursiveTwo.value'),
+  // eslint-disable-next-line prettier/prettier
+  username: Config.get("app.name"),
+  env: Config.get('app.env'),
 }
