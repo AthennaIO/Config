@@ -114,8 +114,13 @@ out
 .yarn/install-state.gz
 .pnp.*
 
+# Transpiled code path
+dist
+build
+
 # IDE
 .idea
+.fleet
 .vscode
 
 # Environment variables file

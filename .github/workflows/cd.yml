@@ -15,14 +15,19 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: npm install
+
+      - name: Transpile code
+        run: npm run build
+
       - name: Automatic GitHub Release
         uses: justincy/github-action-npm-release@2.0.1
         id: release
+
       - name: Publish to NPM Registry
         run: npm publish --access public
         if: steps.release.outputs.released == 'true'

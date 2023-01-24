@@ -35,7 +35,7 @@ test.group('EnvTest', group => {
   })
 
   test('should override pre set environment variables', async ({ assert }) => {
-    process.env.OVERRIDE_ENV = true
+    process.env.OVERRIDE_ENV = 'true'
     process.env.PRESET = 'true'
     process.env.NODE_ENV = ''
     EnvHelper.resolveFile()
@@ -95,5 +95,15 @@ test.group('EnvTest', group => {
     EnvHelper.resolveFile()
 
     assert.equal(Env('NODE_ENV'), 'undefined')
+  })
+
+  test('should be able to resolve any env file path without depending on NODE_ENV', async ({ assert }) => {
+    EnvHelper.resolveFilePath(Path.stubs('.env.path'))
+
+    assert.equal(Env('ENV'), 'env.path')
+  })
+
+  test('should not throw errors when .env file does not exist', async ({ assert }) => {
+    assert.isUndefined(EnvHelper.resolveFilePath(Path.stubs('.env.not-found')))
   })
 })

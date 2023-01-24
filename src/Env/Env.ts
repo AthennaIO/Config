@@ -10,13 +10,15 @@
 import { EnvHelper } from '#src/Helpers/EnvHelper'
 
 /**
- * Return the env value if found or the fallback defaultValue.
- *
- * @param {string} env
- * @param {any} [defaultValue]
- * @param {boolean} [autoCast]
+ * Return the env value if found or the defaultValue.
+ * Env function will also autoCast boolean and number
+ * string values.
  */
-export function Env(env, defaultValue, autoCast = true) {
+export function Env<T = any>(
+  env: string,
+  defaultValue?: any,
+  autoCast = true,
+): T {
   const environment = EnvHelper.setEnvInEnv(process.env[env], autoCast)
 
   if (!environment) {
