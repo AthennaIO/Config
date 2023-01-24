@@ -12,6 +12,8 @@ import { pathToFileURL } from 'node:url'
 import { specReporter } from '@japa/spec-reporter'
 import { configure, processCliArgs, run } from '@japa/runner'
 
+import('./japaTypes.js')
+
 /*
 |--------------------------------------------------------------------------
 | Configure tests
