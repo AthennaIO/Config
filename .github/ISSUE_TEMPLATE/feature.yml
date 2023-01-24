@@ -18,7 +18,7 @@ body:
     id: solution
     attributes:
       label: Motivation
-      description: Outline your motivation for the proposal. How will it make @athenna/Config better?
+      description: Outline your motivation for the proposal. How will it make @athenna/config better?
     validations:
       required: true
   - type: textarea
