@@ -20,7 +20,7 @@ export class EnvHelper {
    *
    * Example: TEST_ENV=${MY_ENV}_Hello -> Env('TEST_ENV') -> env_Hello
    */
-  public static setEnvInEnv(environment: any, autoCast: boolean): string {
+  public static setEnvInEnv<T = any>(environment: any, autoCast: boolean): T {
     if (!Is.String(environment)) {
       return environment
     }
@@ -28,7 +28,7 @@ export class EnvHelper {
     const matches = environment.match(/\${([^}]+)}/g)
 
     if (!matches) {
-      return environment
+      return environment as T
     }
 
     matches.forEach(match => {
@@ -45,7 +45,7 @@ export class EnvHelper {
       environment = environment.replace(new RegExp(match, 'g'), value)
     })
 
-    return environment
+    return environment as T
   }
 
   /**

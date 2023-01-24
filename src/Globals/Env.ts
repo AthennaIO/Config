@@ -7,13 +7,23 @@
  * file that was distributed with this source code.
  */
 
-import { Env } from '#src/Env/Env'
+import { Env as EnvImpl } from '#src/Env/Env'
 
 declare global {
-  export const Env: Env
+  /**
+   * Return the env value if found or the defaultValue.
+   * Env function will also autoCast boolean and number
+   * string values.
+   */
+  export function Env<T = any>(
+    env: string,
+    defaultValue?: any,
+    autoCast?: boolean,
+  ): T
 }
 
 const __global: any = global
-if (!__global.Env) {
-  __global.Env = Env
+
+if (!__global.EnvImpl) {
+  __global.Env = EnvImpl
 }

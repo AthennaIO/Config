@@ -12,7 +12,9 @@ import { Config as ConfigImpl } from '#src/Config/Config'
 declare global {
   export class Config extends ConfigImpl {}
 }
+
 const __global: any = global
+
 if (!__global.Config) {
   __global.Config = ConfigImpl
 }
