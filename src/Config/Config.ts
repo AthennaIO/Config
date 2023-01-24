@@ -7,100 +7,91 @@
  * file that was distributed with this source code.
  */
 
-import lodash from 'lodash'
 import check from 'syntax-error'
+
+import {
+  File,
+  Json,
+  Path,
+  Folder,
+  Module,
+  ObjectBuilder,
+} from '@athenna/common'
+
 import { parse } from 'node:path'
-
-import { File, Folder, Is, Json, Module, Path } from '@athenna/common'
-
 import { ConfigSyntaxException } from '#src/Exceptions/ConfigSyntaxException'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
 
 export class Config {
   /**
-   * Map structure to save all configuration files.
+   * Object to save all the configurations.
    */
-  public static configs = new Map<string, any>()
+  public static configs: ObjectBuilder = Json.builder({
+    ignoreNull: false,
+    ignoreUndefined: true,
+    referencedValues: false,
+  })
+
+  /**
+   * Clear all the configurations of configs object.
+   */
+  public static clear(): typeof Config {
+    this.configs = Json.builder({
+      ignoreNull: false,
+      ignoreUndefined: true,
+      referencedValues: false,
+    })
+
+    return this
+  }
 
   /**
    * Verify if configuration key has the same value.
    */
   public static is(key: string, ...values: any[]): boolean {
-    let is = false
-    values = Is.Array(values[0]) ? values[0] : values
-
-    for (const value of values) {
-      if (this.get(key) === value) {
-        is = true
-        break
-      }
-    }
-
-    return is
+    return this.configs.is(key, ...values)
   }
 
   /**
    * Verify if configuration key does not have the same value.
    */
   public static isNot(key: string, ...values: any[]): boolean {
-    return !this.is(key, ...values)
+    return this.configs.isNot(key, ...values)
   }
 
   /**
    * Verify if configuration key exists.
    */
   public static exists(key: string): boolean {
-    return !!this.get(key)
+    return this.configs.exists(key)
   }
 
   /**
    * Verify if configuration key does not exist.
    */
   public static notExists(key: string): boolean {
-    return !this.exists(key)
+    return this.configs.notExists(key)
   }
 
   /**
    * Verify if configuration keys exists.
    */
   public static existsAll(...keys: any[]): boolean {
-    let existsAll = true
-    keys = Is.Array(keys[0]) ? keys[0] : keys
-
-    for (const key of keys) {
-      if (this.notExists(key)) {
-        existsAll = false
-
-        break
-      }
-    }
-
-    return existsAll
+    return this.configs.existsAll(...keys)
   }
 
   /**
    * Verify if configuration keys not exists.
    */
   public static notExistsAll(...keys: any[]): boolean {
-    return !this.existsAll(...keys)
+    return this.configs.notExistsAll(...keys)
   }
 
   /**
    * Set a value in the configuration key.
    */
   public static set(key: string, value: any | any[]): typeof Config {
-    value = Json.copy(value)
-
-    const [mainKey, ...keys] = key.split('.')
-
-    if (key === mainKey) {
-      this.configs.set(key, value)
-
-      return this
-    }
-
-    const config = this.configs.get(mainKey) || {}
-    this.configs.set(mainKey, lodash.set(config, keys.join('.'), value))
+    this.configs.set(key, value)
 
     return this
   }
@@ -109,21 +100,7 @@ export class Config {
    * Delete the configuration key.
    */
   public static delete(key: string): typeof Config {
-    if (this.notExists(key)) {
-      return this
-    }
-
-    const [mainKey, ...keys] = key.split('.')
-
-    if (key === mainKey) {
-      this.configs.delete(key)
-
-      return this
-    }
-
-    const config = this.configs.get(mainKey)
-    lodash.unset(config, keys.join('.'))
-    this.configs.set(mainKey, config)
+    this.configs.delete(key)
 
     return this
   }
@@ -133,30 +110,20 @@ export class Config {
    * found, defaultValue will be used.
    */
   public static get<T = any>(key?: string, defaultValue: any = undefined): T {
-    if (!key) {
-      const config: any = {}
-
-      for (const [key, value] of this.configs.entries()) {
-        config[key] = value
-      }
-
-      return config
-    }
-
-    const [mainKey, ...keys] = key.split('.')
-
-    const config = this.configs.get(mainKey)
-
-    return Json.copy(Json.get(config, keys.join('.'), defaultValue))
+    return this.configs.get<T>(key, defaultValue)
   }
 
   /**
    * Load all configuration files in path.
    */
   public static async loadAll(
-    path: string = Path.config(),
+    path = Path.config(),
     safe = false,
   ): Promise<void> {
+    if (!(await Folder.exists(path))) {
+      return
+    }
+
     const { files } = await new Folder(path).load()
 
     const promises = files.map(file =>
@@ -174,9 +141,13 @@ export class Config {
     path: string,
     callNumber?: number,
   ): Promise<void> {
+    if (!(await File.exists(path))) {
+      return
+    }
+
     const { name } = parse(path)
 
-    if (this.configs.has(name)) {
+    if (this.exists(name)) {
       return
     }
 
@@ -187,6 +158,10 @@ export class Config {
    * Load the configuration file.
    */
   public static async load(path: string, callNumber = 0): Promise<void> {
+    if (!(await File.exists(path))) {
+      return
+    }
+
     const { dir, name, base, ext } = parse(path)
 
     if (callNumber > 500) {
