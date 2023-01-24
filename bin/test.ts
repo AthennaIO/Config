@@ -1,5 +1,5 @@
 /**
- * @athenna/Config
+ * @athenna/config
  *
  * (c) Victor Tesoura Júnior <txsoura@athenna.io>
  *
