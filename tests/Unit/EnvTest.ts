@@ -96,4 +96,14 @@ test.group('EnvTest', group => {
 
     assert.equal(Env('NODE_ENV'), 'undefined')
   })
+
+  test('should be able to resolve any env file path without depending on NODE_ENV', async ({ assert }) => {
+    EnvHelper.resolveFilePath(Path.stubs('.env.path'))
+
+    assert.equal(Env('ENV'), 'env.path')
+  })
+
+  test('should not throw errors when .env file does not exist', async ({ assert }) => {
+    assert.isUndefined(EnvHelper.resolveFilePath(Path.stubs('.env.not-found')))
+  })
 })

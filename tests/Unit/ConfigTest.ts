@@ -10,8 +10,8 @@
 import { test } from '@japa/runner'
 
 import { File, Folder, Path } from '@athenna/common'
-// import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
-// import { ConfigSyntaxException } from '#src/Exceptions/ConfigSyntaxException'
+import { ConfigSyntaxException } from '#src/Exceptions/ConfigSyntaxException'
+import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
 
 test.group('ConfigTest', group => {
   group.setup(async () => {
@@ -128,13 +128,13 @@ test.group('ConfigTest', group => {
     Config.set('app', mainConfig)
   })
 
-  // test('should throw an error when loading a file that is trying to use Config.get() to get information from other Config file but this Config file is trying to use Config.get() to this same file', async ({
-  //   assert,
-  // }) => {
-  //   const useCase = async () => await Config.load(Path.stubs('Config/recursiveOne.js'))
-  //
-  //   await assert.rejects(useCase, RecursiveConfigException)
-  // })
+  test('should throw an error when loading a file that is trying to use Config.get() to get information from other Config file but this Config file is trying to use Config.get() to this same file', async ({
+    assert,
+  }) => {
+    const useCase = async () => await Config.load(Path.stubs('config/recursiveOne.ts'))
+
+    await assert.rejects(useCase, RecursiveConfigException)
+  })
 
   test('should not load .map/.d.ts files', async ({ assert }) => {
     await Config.load(Path.config('app.d.ts'))
@@ -148,7 +148,7 @@ test.group('ConfigTest', group => {
 
     process.env.NODE_ENV = 'example'
 
-    Config.configs.clear()
+    Config.clear()
 
     await Config.safeLoad(Path.config('app.ts'))
     await Config.safeLoad(Path.config('database.ts'))
@@ -156,9 +156,30 @@ test.group('ConfigTest', group => {
     assert.equal(Config.get('app.env'), 'example')
   })
 
-  // test('should be able to check and capture syntax errors inside Config files', async ({ assert }) => {
-  //   await new File(Path.stubs('syntaxError.js.template')).copy(Path.stubs('syntaxError.js'))
-  //
-  //   await assert.rejects(() => Config.load(Path.stubs('syntaxError.js')), ConfigSyntaxException)
-  // })
+  test('should be able to check and capture syntax errors inside Config files', async ({ assert }) => {
+    await new File(Path.stubs('syntaxError.ts.template')).copy(Path.stubs('syntaxError.ts'))
+
+    await assert.rejects(() => Config.load(Path.stubs('syntaxError.ts')), ConfigSyntaxException)
+  })
+
+  test('should not throw errors if configuration path does not exist in load', async ({ assert }) => {
+    const path = Path.stubs('not-found.ts')
+
+    assert.isFalse(await File.exists(path))
+    assert.isUndefined(await Config.load(path))
+  })
+
+  test('should not throw errors if configuration path does not exist in safe load', async ({ assert }) => {
+    const path = Path.stubs('not-found.ts')
+
+    assert.isFalse(await File.exists(path))
+    assert.isUndefined(await Config.safeLoad(path))
+  })
+
+  test('should not throw errors if configuration path does not exist in load all', async ({ assert }) => {
+    const path = Path.stubs('not-found/path')
+
+    assert.isFalse(await Folder.exists(path))
+    assert.isUndefined(await Config.loadAll(path))
+  })
 })
