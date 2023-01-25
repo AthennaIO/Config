@@ -110,14 +110,14 @@ export class EnvHelper {
    * Verify if envs preset in process.env should be override
    * by envs that are set inside .env files.
    */
-  static isToOverrideEnvs(): boolean {
+  public static isToOverrideEnvs(): boolean {
     return this.isEnvTrue(process.env.OVERRIDE_ENV)
   }
 
   /**
    * Verify if the env variable is true, 'true' or '(true)'.
    */
-  static isEnvTrue(env: string): boolean {
+  public static isEnvTrue(env: string): boolean {
     return env && (env === 'true' || env === '(true)')
   }
 }
