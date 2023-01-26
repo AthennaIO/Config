@@ -1,16 +1,18 @@
 /**
  * @athenna/config
  *
- * (c) João Lenon <lenon@athenna.io>
+ * (c) Victor Tesoura Júnior <txsoura@athenna.io>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-import { pathToFileURL } from 'url'
 import { assert } from '@japa/assert'
+import { pathToFileURL } from 'node:url'
 import { specReporter } from '@japa/spec-reporter'
 import { configure, processCliArgs, run } from '@japa/runner'
+
+import('./japaTypes.js')
 
 /*
 |--------------------------------------------------------------------------
@@ -21,15 +23,15 @@ import { configure, processCliArgs, run } from '@japa/runner'
 | tests runner.
 |
 | The first method call "processCliArgs" process the command line arguments
-| and turns them into a config object. Using this method is not mandatory.
+| and turns them into a Config object. Using this method is not mandatory.
 |
-| Please consult japa.dev/runner-config for the config docs.
+| Please consult japa.dev/runner-Config for the Config docs.
 */
 
 configure({
   ...processCliArgs(process.argv.slice(2)),
   ...{
-    files: ['tests/**/*Test.js'],
+    files: ['tests/**/*Test.ts'],
     plugins: [assert()],
     reporters: [specReporter()],
     importer: filePath => import(pathToFileURL(filePath).href),
