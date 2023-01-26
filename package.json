@@ -36,14 +36,10 @@
     ".": "./build/index.js"
   },
   "imports": {
-    "#src/*": [
-      "./src/*.ts",
-      "./src/*.js"
-    ],
-    "#tests/*": [
-      "./tests/*.ts",
-      "./tests/*.js"
-    ]
+    "#src/*": "./src/*.ts",
+    "#src": "./src/index.ts",
+    "#tests/*": "./tests/*.ts",
+    "#tests": "./tests/index.ts"
   },
   "dependencies": {
     "dotenv": "^16.0.0",
