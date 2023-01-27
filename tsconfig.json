@@ -5,15 +5,17 @@
   },
   "compilerOptions": {
     "strict": false,
-    "rootDir": ".",
+    "rootDir": "src",
     "outDir": "build",
     "module": "ESNext",
     "target": "ESNext",
-    "esModuleInterop": true,
+    "declaration": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
     "removeComments": false,
     "resolveJsonModule": true,
     "moduleResolution": "NodeNext"
   },
-  "exclude": ["node_modules"]
+  "include": ["src"],
+  "exclude": ["bin", "node_modules", "tests"]
 }
