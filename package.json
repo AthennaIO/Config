@@ -16,10 +16,10 @@
     "athenna"
   ],
   "scripts": {
-    "build": "rimraf build && tsc",
+    "build": "ts-node bin/build.ts",
     "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix",
-    "test": "npm run --silent lint:fix && ts-node ./bin/test.ts",
-    "test:debug": "cross-env DEBUG=api:* ts-node ./bin/test.ts --inspect",
+    "test": "npm run --silent lint:fix && ts-node bin/test.ts",
+    "test:debug": "cross-env DEBUG=api:* ts-node bin/test.ts --inspect",
     "test:coverage": "c8 npm run --silent test"
   },
   "files": [

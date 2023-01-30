@@ -10,7 +10,7 @@
 import { assert } from '@japa/assert'
 import { pathToFileURL } from 'node:url'
 import { specReporter } from '@japa/spec-reporter'
-import { processCliArgs, configure, run } from '@japa/runner'
+import { configure, processCliArgs, run } from '@japa/runner'
 
 /*
 |--------------------------------------------------------------------------
@@ -22,18 +22,24 @@ import { processCliArgs, configure, run } from '@japa/runner'
 
 declare module '@japa/assert' {
   export interface Assert {
-    throws(fn: () => void, errType: any, message?: string): void
-    doesNotThrows(fn: () => void, errType: any, message?: string): void
+    throws(fn: () => any, errType: any, message?: string): void
+    doesNotThrows(fn: () => any, errType: any, message?: string): void
     rejects(
-      fn: () => void | Promise<void>,
+      fn: () => any | Promise<any>,
       errType: any,
       message?: string,
-    ): Promise<void>
+    ): Promise<any>
     doesNotRejects(
-      fn: () => void | Promise<void>,
+      fn: () => any | Promise<any>,
       errType: any,
       message?: string,
-    ): Promise<void>
+    ): Promise<any>
+  }
+}
+
+declare module '@japa/runner' {
+  interface TestContext {
+    assert: import('@japa/assert').Assert
   }
 }
 
