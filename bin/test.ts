@@ -1,7 +1,7 @@
 /**
  * @athenna/config
  *
- * (c) Victor Tesoura Júnior <txsoura@athenna.io>
+ * (c) João Lenon <lenon@athenna.io>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,7 +12,47 @@ import { pathToFileURL } from 'node:url'
 import { specReporter } from '@japa/spec-reporter'
 import { configure, processCliArgs, run } from '@japa/runner'
 
-import('./japaTypes.js')
+/*
+|--------------------------------------------------------------------------
+| Japa types
+|--------------------------------------------------------------------------
+|
+| Declare customized japa types.
+*/
+
+declare module '@japa/assert' {
+  export interface Assert {
+    throws(fn: () => any, errType: any, message?: string): void
+    doesNotThrows(fn: () => any, errType: any, message?: string): void
+    rejects(
+      fn: () => any | Promise<any>,
+      errType: any,
+      message?: string,
+    ): Promise<any>
+    doesNotRejects(
+      fn: () => any | Promise<any>,
+      errType: any,
+      message?: string,
+    ): Promise<any>
+  }
+}
+
+declare module '@japa/runner' {
+  interface TestContext {
+    assert: import('@japa/assert').Assert
+  }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Set IS_TS env.
+|--------------------------------------------------------------------------
+|
+| Set the IS_TS environement variable to true. Very useful when using the
+| Path helper.
+*/
+
+process.env.IS_TS = 'true'
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +63,9 @@ import('./japaTypes.js')
 | tests runner.
 |
 | The first method call "processCliArgs" process the command line arguments
-| and turns them into a Config object. Using this method is not mandatory.
+| and turns them into a config object. Using this method is not mandatory.
 |
-| Please consult japa.dev/runner-Config for the Config docs.
+| Please consult japa.dev/runner-config for the config docs.
 */
 
 configure({
@@ -35,6 +75,7 @@ configure({
     plugins: [assert()],
     reporters: [specReporter()],
     importer: filePath => import(pathToFileURL(filePath).href),
+    timeout: 5000,
   },
 })
 

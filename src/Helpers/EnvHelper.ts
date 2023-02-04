@@ -9,9 +9,8 @@
 
 import dotenv from 'dotenv'
 
+import { Env } from '#src'
 import { Is, Path } from '@athenna/common'
-
-import { Env } from '#src/index'
 
 export class EnvHelper {
   /**

@@ -5,7 +5,7 @@
   },
   "compilerOptions": {
     "strict": false,
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "build",
     "module": "ESNext",
     "target": "ESNext",
@@ -16,6 +16,5 @@
     "resolveJsonModule": true,
     "moduleResolution": "NodeNext"
   },
-  "include": ["src"],
-  "exclude": ["bin", "node_modules", "tests"]
+  "exclude": ["node_modules"]
 }
