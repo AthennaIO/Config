@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import('./Globals/Env.js')
-import('./Globals/Config.js')
+export * from './Globals/Env.js'
+export * from './Globals/Config.js'
 
 export * from './Env/Env.js'
 export * from './Config/Config.js'
