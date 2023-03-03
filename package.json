@@ -16,10 +16,11 @@
     "athenna"
   ],
   "scripts": {
-    "build": "ts-node bin/build.ts",
+    "node": "cross-env NODE_OPTIONS=\"--experimental-import-meta-resolve\" ts-node",
+    "build": "npm run node --silent -- bin/build.ts",
     "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix",
-    "test": "npm run --silent lint:fix && ts-node bin/test.ts",
-    "test:debug": "cross-env DEBUG=api:* ts-node bin/test.ts --inspect",
+    "test": "npm run --silent lint:fix && npm run node --silent -- bin/test.ts",
+    "test:debug": "cross-env DEBUG=api:* npm run node --silent -- bin/test.ts --inspect",
     "test:coverage": "c8 npm run --silent test"
   },
   "files": [
