@@ -27,9 +27,7 @@ const path = Path.nodeModules('@athenna/tsconfig.build.json')
 | Create the tsconfig file for building the project.
 */
 
-const tsconfig = JSON.parse(
-  new File('../tsconfig.json').getContentSync().toString(),
-)
+const tsconfig = await new File('../tsconfig.json').getContentAsJson()
 
 delete tsconfig['ts-node']
 
@@ -38,8 +36,6 @@ tsconfig.compilerOptions.outDir = '../../build'
 
 tsconfig.include = ['../../src']
 tsconfig.exclude = ['../../bin', '../../node_modules', '../../tests']
-
-const tsconfigBuild = JSON.stringify(tsconfig)
 
 /*
 |--------------------------------------------------------------------------
@@ -50,12 +46,7 @@ const tsconfigBuild = JSON.stringify(tsconfig)
 | compilation and deleting the tsconfig file generated.
 */
 
-const file = new File(path, Buffer.from(tsconfigBuild))
-
-if (file.fileExists) {
-  await file.remove()
-}
-
-await file.load()
+const file = new File(path, '')
+await file.setContent(JSON.stringify(tsconfig))
 await Exec.command(`rimraf ../build && tsc --project ${path}`)
 await file.remove()
