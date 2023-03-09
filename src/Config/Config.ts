@@ -7,19 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import check from 'syntax-error'
-
-import {
-  File,
-  Json,
-  Path,
-  Folder,
-  Module,
-  ObjectBuilder,
-} from '@athenna/common'
-
 import { parse } from 'node:path'
-import { ConfigSyntaxException } from '#src/Exceptions/ConfigSyntaxException'
+import { File, Json, Path, Folder, ObjectBuilder, Exec } from '@athenna/common'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
 
 export class Config {
@@ -97,6 +86,19 @@ export class Config {
   }
 
   /**
+   * Set a value in the configuration key if value is not defined.
+   */
+  public static safeSet(key: string, value: any | any[]): typeof Config {
+    if (this.configs.exists(key)) {
+      return this
+    }
+
+    this.configs.set(key, value)
+
+    return this
+  }
+
+  /**
    * Delete the configuration key.
    */
   public static delete(key: string): typeof Config {
@@ -126,11 +128,9 @@ export class Config {
 
     const { files } = await new Folder(path).load()
 
-    const promises = files.map(file =>
+    await Exec.concurrently(files, file =>
       safe ? this.safeLoad(file.path) : this.load(file.path),
     )
-
-    await Promise.all(promises)
   }
 
   /**
@@ -174,13 +174,6 @@ export class Config {
 
     const file = new File(path).loadSync()
     const fileContent = file.getContentSync().toString()
-    const syntaxErr = check(fileContent, file.href, {
-      sourceType: 'module',
-    })
-
-    if (syntaxErr) {
-      throw new ConfigSyntaxException(syntaxErr, file.base)
-    }
 
     if (fileContent.includes('Config.get')) {
       const matches = fileContent.match(/Config.get\(([^)]+)\)/g)
@@ -200,8 +193,8 @@ export class Config {
      * Add random number to file import path so
      * Node.js will not cache the imported file.
      */
-    const versionedPath = `${file.href}?version=${Math.random()}`
+    file.href = `${file.href}?version=${Math.random()}`
 
-    this.configs.set(name, await Module.get(import(versionedPath)))
+    this.configs.set(name, await file.import())
   }
 }
