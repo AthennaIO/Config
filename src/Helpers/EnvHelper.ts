@@ -10,7 +10,7 @@
 import dotenv from 'dotenv'
 
 import { Env } from '#src'
-import { Is, Path } from '@athenna/common'
+import { File, Is, Path } from '@athenna/common'
 
 export class EnvHelper {
   /**
@@ -66,12 +66,12 @@ export class EnvHelper {
       return +environment
     }
 
-    if (Is.Json(environment)) {
-      return JSON.parse(environment)
-    }
-
     if (environment === 'true' || environment === 'false') {
       return environment === 'true'
+    }
+
+    if (Is.Json(environment)) {
+      return JSON.parse(environment)
     }
 
     return environment
@@ -81,14 +81,14 @@ export class EnvHelper {
    * Resolve the env file according to NODE_ENV
    * environment variable.
    */
-  public static resolveFile(): void {
-    const environment = process.env.NODE_ENV
+  public static resolveFile(lookupNodeEnv = false): void {
+    const environment = this.getNodeEnv(lookupNodeEnv)
     const configurations = {
       path: Path.pwd('.env'),
       override: this.isToOverrideEnvs(),
     }
 
-    if (environment && environment !== '' && environment !== 'production') {
+    if (environment) {
       configurations.path = Path.pwd(`.env.${environment}`)
     }
 
@@ -118,5 +118,44 @@ export class EnvHelper {
    */
   public static isEnvTrue(env: string): boolean {
     return env && (env === 'true' || env === '(true)')
+  }
+
+  /**
+   * Get the NODE_ENV variable from process.env or from the
+   * .env file if exists in project root.
+   */
+  public static getNodeEnv(lookupNodeEnv: boolean): string {
+    if (
+      process.env.NODE_ENV &&
+      process.env.NODE_ENV !== '' &&
+      process.env.NODE_ENV !== 'undefined' &&
+      process.env.NODE_ENV !== 'production'
+    ) {
+      return process.env.NODE_ENV
+    }
+
+    if (!lookupNodeEnv) {
+      return null
+    }
+
+    const file = new File(Path.pwd('.env'), '')
+
+    if (!file.fileExists) {
+      return null
+    }
+
+    const content = file.getContentAsStringSync()
+
+    if (content && content.includes('NODE_ENV=')) {
+      process.env.NODE_ENV = content
+        .split('NODE_ENV=')[1]
+        .split('\n')[0]
+        .replace(/'/g, '')
+        .replace(/"/g, '')
+
+      return process.env.NODE_ENV
+    }
+
+    return null
   }
 }
