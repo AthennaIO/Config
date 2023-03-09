@@ -141,8 +141,6 @@ export class EnvHelper {
 
     const content = file.getContentAsStringSync()
 
-    console.log(content)
-
     if (content && content.includes('NODE_ENV=')) {
       let value = content.split('NODE_ENV=')[1]
 

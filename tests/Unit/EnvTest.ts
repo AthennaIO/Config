@@ -174,7 +174,7 @@ export default class EnvTest {
   public async shouldNotTryToLoadNodeEnvIfEnvFileContentDoesNotHaveNODE_ENV({ assert }: TestContext) {
     const file = new File(Path.pwd('.env'))
 
-    await file.setContent(file.getContentAsStringSync().replace('NODE_ENV="other"\n', ''))
+    await file.setContent(file.getContentAsStringSync().replace('NODE_ENV="other"', ''))
 
     process.env.NODE_ENV = undefined
     process.env.OVERRIDE_ENV = '(true)'
