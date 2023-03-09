@@ -14,37 +14,6 @@ import { configure, processCliArgs, run } from '@japa/runner'
 
 /*
 |--------------------------------------------------------------------------
-| Japa types
-|--------------------------------------------------------------------------
-|
-| Declare customized japa types.
-*/
-
-declare module '@japa/assert' {
-  export interface Assert {
-    throws(fn: () => any, errType: any, message?: string): void
-    doesNotThrows(fn: () => any, errType: any, message?: string): void
-    rejects(
-      fn: () => any | Promise<any>,
-      errType: any,
-      message?: string,
-    ): Promise<any>
-    doesNotRejects(
-      fn: () => any | Promise<any>,
-      errType: any,
-      message?: string,
-    ): Promise<any>
-  }
-}
-
-declare module '@japa/runner' {
-  interface TestContext {
-    assert: import('@japa/assert').Assert
-  }
-}
-
-/*
-|--------------------------------------------------------------------------
 | Set IS_TS env.
 |--------------------------------------------------------------------------
 |

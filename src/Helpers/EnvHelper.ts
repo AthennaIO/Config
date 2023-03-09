@@ -152,6 +152,7 @@ export class EnvHelper {
         .split('\n')[0]
         .replace(/'/g, '')
         .replace(/"/g, '')
+        .replace(/\r/g, '')
 
       return process.env.NODE_ENV
     }
