@@ -125,12 +125,7 @@ export class EnvHelper {
    * .env file if exists in project root.
    */
   public static getNodeEnv(lookupNodeEnv: boolean): string {
-    if (
-      process.env.NODE_ENV &&
-      process.env.NODE_ENV !== '' &&
-      process.env.NODE_ENV !== 'undefined' &&
-      process.env.NODE_ENV !== 'production'
-    ) {
+    if (this.isDefinedEnv(process.env.NODE_ENV)) {
       return process.env.NODE_ENV
     }
 
@@ -146,17 +141,41 @@ export class EnvHelper {
 
     const content = file.getContentAsStringSync()
 
+    console.log(content)
+
     if (content && content.includes('NODE_ENV=')) {
-      process.env.NODE_ENV = content
-        .split('NODE_ENV=')[1]
-        .split('\n')[0]
+      let value = content.split('NODE_ENV=')[1]
+
+      if (value.includes('\n')) {
+        value = value.split('\n')[0]
+      }
+
+      const serializedValue = value
         .replace(/'/g, '')
         .replace(/"/g, '')
         .replace(/\r/g, '')
 
-      return process.env.NODE_ENV
+      if (this.isDefinedEnv(serializedValue)) {
+        process.env.NODE_ENV = serializedValue
+
+        return process.env.NODE_ENV
+      }
+
+      return null
     }
 
     return null
+  }
+
+  /**
+   * Verify if some environment is defined ignoring.
+   */
+  public static isDefinedEnv(environment: string) {
+    return (
+      environment &&
+      environment !== '' &&
+      environment !== 'undefined' &&
+      environment !== 'production'
+    )
   }
 }

@@ -168,10 +168,32 @@ export default class EnvTest {
   }
 
   @Test()
+  @Cleanup(async () => {
+    await new File(Path.stubs('.env')).copy(Path.pwd('.env'))
+  })
   public async shouldNotTryToLoadNodeEnvIfEnvFileContentDoesNotHaveNODE_ENV({ assert }: TestContext) {
     const file = new File(Path.pwd('.env'))
 
     await file.setContent(file.getContentAsStringSync().replace('NODE_ENV="other"\n', ''))
+
+    process.env.NODE_ENV = undefined
+    process.env.OVERRIDE_ENV = '(true)'
+
+    EnvHelper.resolveFile(true)
+
+    assert.isDefined(Env('NUMBER_ENV'))
+    assert.isUndefined(Env('OTHER_DEFINED'))
+    assert.equal(Env('NODE_ENV'), 'undefined')
+  }
+
+  @Test()
+  @Cleanup(async () => {
+    await new File(Path.stubs('.env')).copy(Path.pwd('.env'))
+  })
+  public async shouldNotLoadNodeEnvIfTheValueOfEnvFileIsNotValid({ assert }: TestContext) {
+    const file = new File(Path.pwd('.env'))
+
+    await file.setContent(file.getContentAsStringSync().replace('NODE_ENV="other"', 'NODE_ENV="undefined"'))
 
     process.env.NODE_ENV = undefined
     process.env.OVERRIDE_ENV = '(true)'
