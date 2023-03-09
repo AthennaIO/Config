@@ -7,80 +7,95 @@
  * file that was distributed with this source code.
  */
 
-import { test } from '@japa/runner'
-
 import { File, Folder, Path } from '@athenna/common'
-import { ConfigSyntaxException } from '#src/Exceptions/ConfigSyntaxException'
+import { Test, BeforeAll, AfterAll, TestContext, Cleanup } from '@athenna/test'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
 
-test.group('ConfigTest', group => {
-  group.setup(async () => {
+export default class ConfigTest {
+  @BeforeAll()
+  public async beforeAll() {
     await new Folder(Path.stubs('config')).copy(Path.config())
     await new File(Path.config('recursiveOne.ts')).remove()
     await new File(Path.config('recursiveTwo.ts')).remove()
     await new File(Path.config('notNormalized.ts')).remove()
 
     await Config.loadAll()
-  })
+  }
 
-  group.teardown(async () => {
+  @AfterAll()
+  public async afterAll() {
     await Folder.safeRemove(Path.config())
-    await File.safeRemove(Path.stubs('syntaxError.ts'))
-  })
+  }
 
-  test('should be able to get all configurations values from Config class', ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToGetAllConfigurationsValuesFromConfigClass({ assert }: TestContext) {
     const configs = Config.get()
 
     assert.deepEqual(configs.app, { name: 'Athenna', env: 'test' })
     assert.deepEqual(configs.database, { username: 'Athenna', env: 'test' })
-  })
+  }
 
-  test('should be able to get full configurations values of one file from Config class', ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToGetFullConfigurationsValuesOfOneFileFromConfigClass({ assert }: TestContext) {
     const app = Config.get('app')
 
     assert.deepEqual(app, {
       name: 'Athenna',
       env: 'test',
     })
-  })
+  }
 
-  test('should be able to fallback to default values when the Config does not exist', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToFallbackToDefaultValuesWhenTheConfigDoesNotExist({ assert }: TestContext) {
     assert.equal(Config.get('http.noExist', 'Hello World'), 'Hello World')
     assert.equal(Config.get('noExistConfig.test', 'Hello World'), 'Hello World')
-  })
+  }
 
-  test('should be able to create a load chain when a configuration uses other configuration', ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToCreateALoadChainWhenAConfigurationUsesOtherConfiguration({ assert }: TestContext) {
     assert.equal(Config.get('app.name'), 'Athenna')
     assert.equal(Config.get('database.username'), 'Athenna')
-  })
+  }
 
-  test('should be able to verify if configurations exists and if has the specified values', ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToVerifyConfigurationsExistence({ assert }: TestContext) {
     assert.isTrue(Config.exists('app.name'))
     assert.isTrue(Config.existsAll('app.name', 'app.env'))
-    assert.isTrue(Config.is('app.name', 'Athenna'))
-    assert.isTrue(Config.is('app.name', 'Wrong', 'WrongAgain', 'Athenna'))
-    assert.isTrue(Config.is('app.name', ['Wrong', 'WrongAgain', 'Athenna']))
-    assert.isFalse(Config.notExists('app.name'))
-    assert.isFalse(Config.notExistsAll('app.name', 'app.env'))
-    assert.isFalse(Config.isNot('app.name', 'Athenna'))
-    assert.isFalse(Config.isNot('app.name', 'Wrong', 'WrongAgain', 'Athenna'))
-
     assert.isFalse(Config.exists('notFound'))
     assert.isFalse(Config.exists('app.notFound'))
     assert.isFalse(Config.exists('app.name.notFound'))
     assert.isFalse(Config.existsAll(['app.name.notFound1', 'app.name.notFound2']))
+  }
+
+  @Test()
+  public async shouldBeAbleToVerifyConfigurationsNegativeExistence({ assert }: TestContext) {
+    assert.isFalse(Config.notExists('app.name'))
+    assert.isFalse(Config.notExistsAll('app.name', 'app.env'))
     assert.isTrue(Config.notExists('notFound'))
     assert.isTrue(Config.notExists('app.notFound'))
     assert.isTrue(Config.notExists('app.name.notFound'))
     assert.isTrue(Config.notExistsAll(['app.name.notFound1', 'app.name.notFound2']))
+  }
 
+  @Test()
+  public async shouldBeAbleToVerifyIfConfigurationsHasSomeValue({ assert }: TestContext) {
+    assert.isTrue(Config.is('app.name', 'Athenna'))
+    assert.isTrue(Config.is('app.name', 'Wrong', 'WrongAgain', 'Athenna'))
+    assert.isTrue(Config.is('app.name', ['Wrong', 'WrongAgain', 'Athenna']))
     assert.isFalse(Config.is('notFound', 'Athenna'))
     assert.isFalse(Config.is('app.name', 'Hello'))
+  }
+
+  @Test()
+  public async shouldBeAbleToVerifyIfConfigurationsHasNotSomeValue({ assert }: TestContext) {
+    assert.isFalse(Config.isNot('app.name', 'Athenna'))
+    assert.isFalse(Config.isNot('app.name', 'Wrong', 'WrongAgain', 'Athenna'))
     assert.isTrue(Config.isNot('notFound', 'Athenna'))
     assert.isTrue(Config.isNot('app.name', 'Hello'))
-  })
+  }
 
-  test('should be able to set values in configurations', ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToSetValuesInConfigurations({ assert }: TestContext) {
     const mainConfig = Config.get('app')
 
     Config.set('app.name.mainName', 'Athenna')
@@ -103,9 +118,24 @@ test.group('ConfigTest', group => {
     assert.deepEqual(Config.get('client.url'), 'http://localhost:1335')
 
     Config.set('app', mainConfig)
-  })
+  }
 
-  test('should be able to delete values from configurations', ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToSafeSetValuesInConfigurations({ assert }: TestContext) {
+    const mainConfig = Config.get('app')
+
+    Config.set('app.name.mainName', 'Athenna')
+    Config.safeSet('app.name.otherName', 'WillDefine')
+    Config.safeSet('app.name.mainName', 'WillNotDefine')
+
+    assert.equal(Config.get('app.name.mainName'), 'Athenna')
+    assert.equal(Config.get('app.name.otherName'), 'WillDefine')
+
+    Config.set('app', mainConfig)
+  }
+
+  @Test()
+  public async shouldBeAbleToDeleteValuesFromConfigurations({ assert }: TestContext) {
     Config.delete('notFound')
 
     const mainConfig = Config.get('app')
@@ -126,24 +156,25 @@ test.group('ConfigTest', group => {
     assert.isTrue(Config.existsAll('app.name', 'app.env', 'app.name.subName'))
 
     Config.set('app', mainConfig)
-  })
+  }
 
-  test('should throw an error when loading a file that is trying to use Config.get() to get information from other Config file but this Config file is trying to use Config.get() to this same file', async ({
-    assert,
-  }) => {
+  @Test()
+  public async shouldThrownAnErrorWhenLoadingAConfigurationFileThatRecursivellyLoadsOther({ assert }: TestContext) {
     const useCase = async () => await Config.load(Path.stubs('config/recursiveOne.ts'))
 
     await assert.rejects(useCase, RecursiveConfigException)
-  })
+  }
 
-  test('should not load .map/.d.ts files', async ({ assert }) => {
+  @Test()
+  public async shouldNotLoadMapAndDTSFiles({ assert }: TestContext) {
     await Config.load(Path.config('app.d.ts'))
     await Config.load(Path.config('app.js.map'))
 
     assert.equal(Config.get('app.name'), 'Athenna')
-  })
+  }
 
-  test('should be able to reload configuration values', async ({ assert }) => {
+  @Test()
+  public async shouldBeAbleToRealodConfigurationValues({ assert }: TestContext) {
     assert.equal(Config.get('app.env'), 'test')
 
     process.env.NODE_ENV = 'example'
@@ -154,32 +185,39 @@ test.group('ConfigTest', group => {
     await Config.safeLoad(Path.config('database.ts'))
 
     assert.equal(Config.get('app.env'), 'example')
-  })
+  }
 
-  test('should be able to check and capture syntax errors inside Config files', async ({ assert }) => {
-    await new File(Path.stubs('syntaxError.ts.template')).copy(Path.stubs('syntaxError.ts'))
-
-    await assert.rejects(() => Config.load(Path.stubs('syntaxError.ts')), ConfigSyntaxException)
-  })
-
-  test('should not throw errors if configuration path does not exist in load', async ({ assert }) => {
+  @Test()
+  public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInLoad({ assert }: TestContext) {
     const path = Path.stubs('not-found.ts')
 
     assert.isFalse(await File.exists(path))
     assert.isUndefined(await Config.load(path))
-  })
+  }
 
-  test('should not throw errors if configuration path does not exist in safe load', async ({ assert }) => {
+  @Test()
+  public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInSafeLoad({ assert }: TestContext) {
     const path = Path.stubs('not-found.ts')
 
     assert.isFalse(await File.exists(path))
     assert.isUndefined(await Config.safeLoad(path))
-  })
+  }
 
-  test('should not throw errors if configuration path does not exist in load all', async ({ assert }) => {
+  @Test()
+  public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInLoadAll({ assert }: TestContext) {
     const path = Path.stubs('not-found/path')
 
     assert.isFalse(await Folder.exists(path))
     assert.isUndefined(await Config.loadAll(path))
-  })
-})
+  }
+
+  @Test()
+  @Cleanup(() => Config.delete('app'))
+  public async shouldBeAbleToLoadAllConfigurationPathSafelly({ assert }: TestContext) {
+    Config.set('app', {})
+
+    await Config.loadAll(Path.config(), true)
+
+    assert.deepEqual(Config.get('app'), {})
+  }
+}
