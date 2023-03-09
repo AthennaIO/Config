@@ -8,7 +8,7 @@
  */
 
 import { assert } from '@japa/assert'
-import { pathToFileURL } from 'node:url'
+import { Importer } from '@athenna/test'
 import { specReporter } from '@japa/spec-reporter'
 import { configure, processCliArgs, run } from '@japa/runner'
 
@@ -74,7 +74,7 @@ configure({
     files: ['tests/**/*Test.ts'],
     plugins: [assert()],
     reporters: [specReporter()],
-    importer: filePath => import(pathToFileURL(filePath).href),
+    importer: Importer.import,
     timeout: 5000,
   },
 })
