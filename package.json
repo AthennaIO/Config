@@ -1,6 +1,6 @@
 {
   "name": "@athenna/config",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Cache and handle environment variables and config files of Athenna.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -16,26 +16,27 @@
     "athenna"
   ],
   "scripts": {
-    "build": "sh node bin/build.ts",
-    "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix",
+    "lint:fix": "eslint \"{bin,src,tests}/**/*.ts\" --fix",
     "test": "npm run --silent lint:fix && sh node bin/test.ts",
     "test:debug": "cross-env DEBUG=api:* sh node --inspect bin/test.ts",
     "test:coverage": "c8 npm run --silent test"
   },
   "files": [
-    "build/*.js",
-    "build/*.d.ts",
-    "build/**/*.js",
-    "build/**/*.d.ts",
-    "templates/**"
+    "src/*.js",
+    "src/*.d.ts",
+    "src/**/*.js",
+    "src/**/*.d.ts",
+    "templates"
   ],
   "type": "module",
-  "main": "./build/index.js",
-  "types": "./build/index.d.ts",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
   "exports": {
-    ".": "./build/index.js"
+    ".": "./src/index.js"
   },
   "imports": {
+    "#bin/*": "./bin/*.js",
+    "#bin": "./bin/index.js",
     "#src/*": "./src/*.js",
     "#src": "./src/index.js",
     "#tests/*": "./tests/*.js",
@@ -46,7 +47,7 @@
     "syntax-error": "^1.4.0"
   },
   "devDependencies": {
-    "@athenna/common": "^3.4.2",
+    "@athenna/common": "^3.4.4",
     "@athenna/test": "^3.2.2",
     "@japa/assert": "^1.3.6",
     "@japa/run-failed-tests": "^1.1.0",
