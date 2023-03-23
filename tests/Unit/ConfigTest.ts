@@ -220,4 +220,14 @@ export default class ConfigTest {
 
     assert.deepEqual(Config.get('app'), {})
   }
+
+  @Test()
+  @Cleanup(() => (process.env.IS_TS = 'true'))
+  public async shouldBeAbleToLoadAllJsFilesButNotTsFilesWhenEnvTsIsFalse({ assert }: TestContext) {
+    process.env.IS_TS = 'false'
+
+    await Config.loadAll(Path.stubs('jsconfig'), false)
+
+    assert.equal(Config.get('app.name'), 'AthennaJS')
+  }
 }
