@@ -8,7 +8,7 @@
  */
 
 import { parse } from 'node:path'
-import { File, Json, Path, Folder, ObjectBuilder, Exec } from '@athenna/common'
+import { File, Json, Path, ObjectBuilder, Exec, Module } from '@athenna/common'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
 
 export class Config {
@@ -122,11 +122,7 @@ export class Config {
     path = Path.config(),
     safe = false,
   ): Promise<void> {
-    if (!(await Folder.exists(path))) {
-      return
-    }
-
-    const { files } = await new Folder(path).load()
+    const files = await Module.getAllJSFilesFrom(path)
 
     await Exec.concurrently(files, file =>
       safe ? this.safeLoad(file.path) : this.load(file.path),
