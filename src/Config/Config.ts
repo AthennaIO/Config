@@ -172,6 +172,10 @@ export class Config {
       return
     }
 
+    if (base.includes('.ts') && Env('IS_TS') === false) {
+      return
+    }
+
     const file = new File(path).loadSync()
     const fileContent = file.getContentSync().toString()
 
