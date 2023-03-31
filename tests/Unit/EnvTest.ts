@@ -76,11 +76,11 @@ export default class EnvTest {
     EnvHelper.resolveFile()
 
     assert.strictEqual(Env('NUMBER_ENV'), 10)
-    assert.strictEqual(Env('STRING_NUMBER_ENV'), '10')
+    assert.strictEqual(Env('NUMBER_ENV', undefined, false), '10')
     assert.strictEqual(Env('BOOLEAN_ENV'), true)
-    assert.strictEqual(Env('STRING_BOOLEAN_ENV'), 'true')
+    assert.strictEqual(Env('BOOLEAN_ENV', undefined, false), 'true')
     assert.deepEqual(Env('OBJECT_ENV'), { name: 'Paulo' })
-    assert.deepEqual(Env('STRING_OBJECT_ENV'), `{"name":"Paulo"}`)
+    assert.deepEqual(Env('OBJECT_ENV', undefined, false), `{"name":"Paulo"}`)
   }
 
   @Test()
@@ -95,7 +95,7 @@ export default class EnvTest {
 
     assert.equal(Env('ENV_IN_ENV'), '10-true')
     assert.deepEqual(Env('ENV_IN_ENV_JSON'), { maintainers: { name: 'Paulo' } })
-    assert.deepEqual(Env('STRING_ENV_IN_ENV_JSON'), `{ "maintainers": {"name":"Paulo"} }`)
+    assert.deepEqual(Env('ENV_IN_ENV_JSON', undefined, false), `{ "maintainers": {"name":"Paulo"} }`)
   }
 
   @Test()
