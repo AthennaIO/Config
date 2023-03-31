@@ -154,6 +154,12 @@ export class EnvHelper {
         .replace(/\r/g, '')
 
       if (this.isDefinedEnv(serializedValue)) {
+        const file = new File(Path.pwd(`.env.${serializedValue}`), '')
+
+        if (!file.fileExists) {
+          return null
+        }
+
         process.env.NODE_ENV = serializedValue
 
         return process.env.NODE_ENV
