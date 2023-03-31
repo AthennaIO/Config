@@ -49,19 +49,9 @@ export class EnvHelper {
 
   /**
    * Cast the environment variable if it values matches a
-   * number string, boolean string or json string. Also,
-   * if the variable has the reserved vars -> () enclosed
-   * it will be removed and returned as string. So the value
-   * (false) in .env is equals to 'false' but the value 10 is
-   * equals to number 10.
+   * number string, boolean string or json string.
    */
   public static castEnv(environment: string): any {
-    if (environment.match(/\((.*?)\)/)) {
-      environment = environment.slice(1, -1)
-
-      return environment
-    }
-
     if (/^-?\d+$/.test(environment)) {
       return +environment
     }
