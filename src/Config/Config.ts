@@ -243,7 +243,14 @@ export class Config {
       configKey = path
         .replace(`${this.fatherConfigPath}${sep}`, '')
         .replace(ext, '')
-        .replace(new RegExp(`${sep}`, 'g'), '.')
+
+      let pattern = `${sep}`
+
+      if (sep === '\\') {
+        pattern = `\\\\`
+      }
+
+      configKey = configKey.replace(new RegExp(pattern, 'g'), '.')
     }
 
     /**
