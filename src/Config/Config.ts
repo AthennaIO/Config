@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { parse } from 'node:path'
+import { sep, parse } from 'node:path'
 import { loadFile, writeFile } from 'magicast'
 import { File, Json, Path, ObjectBuilder, Exec, Module } from '@athenna/common'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
@@ -241,9 +241,9 @@ export class Config {
 
     if (this.fatherConfigPath) {
       configKey = path
-        .replace(`${this.fatherConfigPath}/`, '')
+        .replace(`${this.fatherConfigPath}${sep}`, '')
         .replace(ext, '')
-        .replace(/\//g, '.')
+        .replace(new RegExp(`${sep}`, 'g'), '.')
     }
 
     /**
