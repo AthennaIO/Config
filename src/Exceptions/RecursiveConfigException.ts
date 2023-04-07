@@ -10,9 +10,6 @@
 import { Exception } from '@athenna/common'
 
 export class RecursiveConfigException extends Exception {
-  /**
-   * Creates a new instance of RecursiveConfigException.
-   */
   public constructor(filePath: string, configName: string) {
     super({
       status: 500,

@@ -7,9 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { parse } from 'node:path'
+import { sep, parse } from 'node:path'
+import { loadFile, writeFile } from 'magicast'
 import { File, Json, Path, ObjectBuilder, Exec, Module } from '@athenna/common'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
+import { NotSupportedKeyException } from '#src/Exceptions/NotSupportedKeyException'
 
 export class Config {
   /**
@@ -20,6 +22,17 @@ export class Config {
     ignoreUndefined: true,
     referencedValues: false,
   })
+
+  /**
+   * Object to save all the paths of the configuration files.
+   */
+  public static paths: ObjectBuilder = Json.builder({
+    ignoreNull: false,
+    ignoreUndefined: true,
+    referencedValues: false,
+  })
+
+  public static fatherConfigPath: string = null
 
   /**
    * Clear all the configurations of configs object.
@@ -116,6 +129,39 @@ export class Config {
   }
 
   /**
+   * Rewrite the configuration file. All values
+   * set in the configuration using the Config
+   * class will be saved in the file.
+   *
+   * @example
+   * ```ts
+   * Config.set('app.foo', 'bar')
+   *
+   * await Config.rewrite('app')
+   * ```
+   */
+  public static async rewrite(key: string): Promise<void> {
+    if (!this.paths.exists(key)) {
+      throw new NotSupportedKeyException(key)
+    }
+
+    const path = this.paths.get(key)
+
+    const mod = await loadFile(path)
+    const config = this.configs.get(key)
+
+    mod.exports.default = config
+
+    await writeFile(mod.$ast, path, {
+      quote: 'single',
+      tabWidth: 2,
+      trailingComma: {
+        objects: true,
+      } as any,
+    })
+  }
+
+  /**
    * Load all configuration files in path.
    */
   public static async loadAll(
@@ -123,6 +169,8 @@ export class Config {
     safe = false,
   ): Promise<void> {
     const files = await Module.getAllJSFilesFrom(path)
+
+    this.fatherConfigPath = path
 
     await Exec.concurrently(files, file =>
       safe ? this.safeLoad(file.path) : this.load(file.path),
@@ -189,12 +237,29 @@ export class Config {
       }
     }
 
+    let configKey = name
+
+    if (this.fatherConfigPath) {
+      configKey = path
+        .replace(`${this.fatherConfigPath}${sep}`, '')
+        .replace(ext, '')
+
+      let pattern = `${sep}`
+
+      if (sep === '\\') {
+        pattern = `\\\\`
+      }
+
+      configKey = configKey.replace(new RegExp(pattern, 'g'), '.')
+    }
+
     /**
      * Add random number to file import path so
      * Node.js will not cache the imported file.
      */
     file.href = `${file.href}?version=${Math.random()}`
 
-    this.configs.set(name, await file.import())
+    this.configs.set(configKey, await file.import())
+    this.paths.set(configKey, file.path)
   }
 }

@@ -7,13 +7,15 @@
  * file that was distributed with this source code.
  */
 
+import { sep } from 'node:path'
 import { File, Folder, Path } from '@athenna/common'
-import { Test, BeforeAll, AfterAll, TestContext, Cleanup } from '@athenna/test'
+import { Test, TestContext, Cleanup, BeforeEach, AfterEach } from '@athenna/test'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
+import { NotSupportedKeyException } from '#src/Exceptions/NotSupportedKeyException'
 
 export default class ConfigTest {
-  @BeforeAll()
-  public async beforeAll() {
+  @BeforeEach()
+  public async beforeEach() {
     await new Folder(Path.stubs('config')).copy(Path.config())
     await new File(Path.config('recursiveOne.ts')).remove()
     await new File(Path.config('recursiveTwo.ts')).remove()
@@ -22,9 +24,11 @@ export default class ConfigTest {
     await Config.loadAll()
   }
 
-  @AfterAll()
-  public async afterAll() {
+  @AfterEach()
+  public async afterEach() {
+    Config.clear()
     await Folder.safeRemove(Path.config())
+    await Folder.safeRemove(Path.stubs('recursive-copy'))
   }
 
   @Test()
@@ -226,8 +230,65 @@ export default class ConfigTest {
   public async shouldBeAbleToLoadAllJsFilesButNotTsFilesWhenEnvTsIsFalse({ assert }: TestContext) {
     process.env.IS_TS = 'false'
 
+    Config.clear()
+
     await Config.loadAll(Path.stubs('jsconfig'), false)
 
     assert.equal(Config.get('app.name'), 'AthennaJS')
+  }
+
+  @Test()
+  public async shouldBeAbleToLoadConfigFoldersRecursivelly({ assert }: TestContext) {
+    Config.clear()
+
+    await Config.loadAll(Path.stubs('recursive'), false)
+
+    assert.equal(Config.get('cli.app.type'), 'cli')
+    assert.equal(Config.get('http.app.type'), 'http')
+  }
+
+  @Test()
+  public async shouldBeAbleToRewriteTheConfigFileAndSaveModifications({ assert }: TestContext) {
+    const folder = await new Folder(Path.stubs('recursive')).copy(Path.stubs('recursive-copy'), { withContent: true })
+
+    Config.clear()
+
+    await Config.loadAll(folder.path, false)
+
+    Config.set('http.app.type', 'cli')
+    Config.set('cli.app.type', 'http')
+
+    await Config.rewrite('cli.app')
+    await Config.rewrite('http.app')
+
+    const files = folder.getFilesByPattern()
+
+    const cliConfig = await files.find(file => file.path.includes(`${sep}cli`)).import()
+    const httpConfig = await files.find(file => file.path.includes(`${sep}http`)).import()
+
+    assert.equal(cliConfig.type, 'http')
+    assert.equal(httpConfig.type, 'cli')
+  }
+
+  @Test()
+  public async shouldThrowAnExceptionIfCallingRewriteMethodWithABadKey({ assert }: TestContext) {
+    const folder = await new Folder(Path.stubs('recursive')).copy(Path.stubs('recursive-copy'), { withContent: true })
+
+    Config.clear()
+
+    await Config.loadAll(folder.path, false)
+
+    await assert.rejects(() => Config.rewrite('cli.app.type'), NotSupportedKeyException)
+  }
+
+  @Test()
+  public async shouldThrowAnExceptionIfCallingRewriteMethodWithANotFoundKey({ assert }: TestContext) {
+    const folder = await new Folder(Path.stubs('recursive')).copy(Path.stubs('recursive-copy'), { withContent: true })
+
+    Config.clear()
+
+    await Config.loadAll(folder.path, false)
+
+    await assert.rejects(() => Config.rewrite('not-found'), NotSupportedKeyException)
   }
 }
