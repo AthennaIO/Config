@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import { sep } from 'node:path'
 import { File, Folder, Path } from '@athenna/common'
 import { Test, TestContext, Cleanup, BeforeEach, AfterEach } from '@athenna/test'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
@@ -262,8 +263,8 @@ export default class ConfigTest {
 
     const files = folder.getFilesByPattern()
 
-    const cliConfig = await files.find(file => file.path.includes('/cli')).import()
-    const httpConfig = await files.find(file => file.path.includes('/http')).import()
+    const cliConfig = await files.find(file => file.path.includes(`${sep}cli`)).import()
+    const httpConfig = await files.find(file => file.path.includes(`${sep}http`)).import()
 
     assert.equal(cliConfig.type, 'http')
     assert.equal(httpConfig.type, 'cli')
