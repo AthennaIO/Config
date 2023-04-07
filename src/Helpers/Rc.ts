@@ -19,7 +19,6 @@ export class Rc {
    */
   public static async setFile(
     path = Path.pwd('.athennarc.json'),
-    pjson = false,
   ): Promise<typeof Rc> {
     this.content = new ObjectBuilder({
       referencedValues: false,
@@ -27,19 +26,9 @@ export class Rc {
       ignoreUndefined: false,
     })
 
-    if (Config.is('rc.isInPackageJson', true) && pjson) {
-      this.file = new File(Path.pwd('package.json'))
+    this.file = await new File(path).load()
 
-      const json = await this.file.getContentAsJson()
-
-      this.content.set(json.athenna)
-
-      return this
-    }
-
-    this.file = new File(path, '')
-
-    const json = await this.file.getContentAsJson()
+    const json = this.file.getContentAsJsonSync()
 
     if (json === null) {
       const mod = await import(this.file.href)
@@ -51,6 +40,12 @@ export class Rc {
       })
 
       this.content.set(mod.default)
+
+      return this
+    }
+
+    if (this.file.base === 'package.json') {
+      this.content.set(json.athenna)
     } else {
       this.content.set(json)
     }
