@@ -12,6 +12,7 @@ import { File, Folder, Path } from '@athenna/common'
 import { Test, TestContext, Cleanup, BeforeEach, AfterEach } from '@athenna/test'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
 import { NotSupportedKeyException } from '#src/Exceptions/NotSupportedKeyException'
+import { NotValidArrayConfigException } from '#src/Exceptions/NotValidArrayConfigException'
 
 export default class ConfigTest {
   @BeforeEach()
@@ -35,7 +36,7 @@ export default class ConfigTest {
   public async shouldBeAbleToGetAllConfigurationsValuesFromConfigClass({ assert }: TestContext) {
     const configs = Config.get()
 
-    assert.deepEqual(configs.app, { name: 'Athenna', env: 'test' })
+    assert.deepEqual(configs.app, { name: 'Athenna', env: 'test', environments: ['default'] })
     assert.deepEqual(configs.database, { username: 'Athenna', env: 'test' })
   }
 
@@ -46,6 +47,7 @@ export default class ConfigTest {
     assert.deepEqual(app, {
       name: 'Athenna',
       env: 'test',
+      environments: ['default'],
     })
   }
 
@@ -111,6 +113,7 @@ export default class ConfigTest {
         subName: 'Framework',
       },
       env: 'test',
+      environments: ['default'],
     })
 
     Config.set('app', { hello: 'world' })
@@ -139,6 +142,28 @@ export default class ConfigTest {
   }
 
   @Test()
+  public async shouldBeAbleToPushValuesToConfigurationsThatAreArrays({ assert }: TestContext) {
+    Config.push('app.environments', 'http')
+    Config.push('app.environments', ['repl', 'console'])
+
+    assert.deepEqual(Config.get('app.environments'), ['default', 'http', 'repl', 'console'])
+  }
+
+  @Test()
+  public async shouldBeAbleToPushValuesToConfigurationsThatDoesNotExist({ assert }: TestContext) {
+    Config.push('app.newArray', 'http')
+    Config.push('app.newArrayArray', ['repl', 'console'])
+
+    assert.deepEqual(Config.get('app.newArray'), ['http'])
+    assert.deepEqual(Config.get('app.newArrayArray'), ['repl', 'console'])
+  }
+
+  @Test()
+  public async shouldThrowAnExceptionIfTryingToPushValueToAConfigurationThatIsNotAnArray({ assert }: TestContext) {
+    assert.throws(() => Config.push('app.name', 'http'), NotValidArrayConfigException)
+  }
+
+  @Test()
   public async shouldBeAbleToDeleteValuesFromConfigurations({ assert }: TestContext) {
     Config.delete('notFound')
 
@@ -163,7 +188,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldThrownAnErrorWhenLoadingAConfigurationFileThatRecursivellyLoadsOther({ assert }: TestContext) {
+  public async shouldThrownAnErrorWhenLoadingAConfigurationFileThatRecursivelyLoadsOther({ assert }: TestContext) {
     const useCase = async () => await Config.load(Path.stubs('config/recursiveOne.ts'))
 
     await assert.rejects(useCase, RecursiveConfigException)
@@ -178,7 +203,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToRealodConfigurationValues({ assert }: TestContext) {
+  public async shouldBeAbleToReloadConfigurationValues({ assert }: TestContext) {
     assert.equal(Config.get('app.env'), 'test')
 
     process.env.NODE_ENV = 'example'
@@ -217,10 +242,20 @@ export default class ConfigTest {
 
   @Test()
   @Cleanup(() => Config.delete('app'))
-  public async shouldBeAbleToLoadAllConfigurationPathSafelly({ assert }: TestContext) {
+  public async shouldBeAbleToLoadAllConfigurationPathSafely({ assert }: TestContext) {
     Config.set('app', {})
 
     await Config.loadAll(Path.config(), true)
+
+    assert.deepEqual(Config.get('app'), {})
+  }
+
+  @Test()
+  @Cleanup(() => Config.delete('app'))
+  public async shouldBeAbleToLoadASingleFileInLoadAllMethod({ assert }: TestContext) {
+    Config.set('app', {})
+
+    await Config.loadAll(Path.config('app.ts'), true)
 
     assert.deepEqual(Config.get('app'), {})
   }
@@ -238,7 +273,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToLoadConfigFoldersRecursivelly({ assert }: TestContext) {
+  public async shouldBeAbleToLoadConfigFoldersRecursively({ assert }: TestContext) {
     Config.clear()
 
     await Config.loadAll(Path.stubs('recursive'), false)
