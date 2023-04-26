@@ -42,14 +42,14 @@ jobs:
       - name: Run tests
         run: npm run test:coverage
 
-     - name: Generate Code Coverage report
-       id: code-coverage
-       uses: barecheck/code-coverage-action@v1
-         with:
-           barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
-           lcov-file: "./tests/Coverage/lcov.info"
-           send-summary-comment: true
-           show-annotations: "warning"
+      - name: Generate Code Coverage report
+        id: code-coverage
+        uses: barecheck/code-coverage-action@v1
+          with:
+            barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
+            lcov-file: "./tests/Coverage/lcov.info"
+            send-summary-comment: true
+            show-annotations: "warning"
 
       - name: Test code compilation
         run: sh scripts/build
