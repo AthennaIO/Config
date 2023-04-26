@@ -7,11 +7,20 @@
  * file that was distributed with this source code.
  */
 
-import { sep, parse } from 'node:path'
+import {
+  File,
+  Json,
+  Path,
+  ObjectBuilder,
+  Exec,
+  Module,
+  Is,
+} from '@athenna/common'
 import { loadFile, writeFile } from 'magicast'
-import { File, Json, Path, ObjectBuilder, Exec, Module } from '@athenna/common'
+import { sep, parse, extname } from 'node:path'
 import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
 import { NotSupportedKeyException } from '#src/Exceptions/NotSupportedKeyException'
+import { NotValidArrayConfigException } from '#src/Exceptions/NotValidArrayConfigException'
 
 export class Config {
   /**
@@ -112,6 +121,28 @@ export class Config {
   }
 
   /**
+   * Push a value to a configuration key that is a valid array.
+   * If configuration is not an array, an exception will be thrown.
+   */
+  public static push(key: string, value: any | any[]): typeof Config {
+    const config = this.configs.get(key, [])
+
+    if (!Is.Array(config)) {
+      throw new NotValidArrayConfigException(key)
+    }
+
+    if (Is.Array(value)) {
+      config.push(...value)
+    } else {
+      config.push(value)
+    }
+
+    this.configs.set(key, config)
+
+    return this
+  }
+
+  /**
    * Delete the configuration key.
    */
   public static delete(key: string): typeof Config {
@@ -168,6 +199,12 @@ export class Config {
     path = Path.config(),
     safe = false,
   ): Promise<void> {
+    if (extname(path)) {
+      safe ? this.safeLoad(path) : this.load(path)
+
+      return
+    }
+
     const files = await Module.getAllJSFilesFrom(path)
 
     this.fatherConfigPath = path
