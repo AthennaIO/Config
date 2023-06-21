@@ -1,4 +1,4 @@
-import { Value } from '#src/Decorators/Value'
+import { Value } from '#src/decorators/Value'
 
 export class AppService {
   @Value('app')

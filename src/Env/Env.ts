@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { EnvHelper } from '#src/Helpers/EnvHelper'
+import { EnvHelper } from '#src/helpers/EnvHelper'
 
 /**
  * Return the env value if found or the defaultValue.

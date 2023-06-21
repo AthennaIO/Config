@@ -10,7 +10,7 @@
 import 'reflect-metadata'
 
 import { Is } from '@athenna/common'
-import { NotFoundConfigException } from '#src/Exceptions/NotFoundConfigException'
+import { NotFoundConfigException } from '#src/exceptions/NotFoundConfigException'
 
 /**
  * Set the value of some configuration in your class property.
@@ -30,5 +30,9 @@ export function Value(key: string, defaultValue?: any): PropertyDecorator {
     }
 
     Object.defineProperty(target, propKey, { value: Config.get(key) })
+
+    console.log(propKey)
+    console.log(target)
+    console.log(target.constructor)
   }
 }

@@ -8,8 +8,8 @@
  */
 
 import { File, Folder, Path } from '@athenna/common'
-import { Test, TestContext, BeforeEach, AfterEach } from '@athenna/test'
-import { NotFoundConfigException } from '#src/Exceptions/NotFoundConfigException'
+import { Test, Context, BeforeEach, AfterEach } from '@athenna/test'
+import { NotFoundConfigException } from '#src/exceptions/NotFoundConfigException'
 
 export default class ValueTest {
   @BeforeEach()
@@ -29,25 +29,26 @@ export default class ValueTest {
   }
 
   @Test()
-  public async shouldBeAbleToSetConfigurationValuesUsingValueDecorator({ assert }: TestContext) {
-    const { AppService } = await import('#tests/Stubs/classes/AppService')
+  public async shouldBeAbleToSetConfigurationValuesUsingValueDecorator({ assert }: Context) {
+    const { AppService } = await import('#tests/stubs/classes/AppService')
 
+    console.log('hey')
     const appService = new AppService()
+
+    console.log(appService)
 
     assert.equal(appService.name, 'Athenna')
     assert.deepEqual(appService.app, { name: 'Athenna', env: 'example', environments: ['default'] })
   }
 
   @Test()
-  public async shouldThrowAnExceptionIfTryingToLoadAConfigurationValueThatDoesNotExist({ assert }: TestContext) {
-    await assert.rejects(() => import('#tests/Stubs/classes/ThrowNotFound'), NotFoundConfigException)
+  public async shouldThrowAnExceptionIfTryingToLoadAConfigurationValueThatDoesNotExist({ assert }: Context) {
+    await assert.rejects(() => import('#tests/stubs/classes/ThrowNotFound'), NotFoundConfigException)
   }
 
   @Test()
-  public async shouldNotThrowExceptionIfDefaultValueIsSetWhenTryingToLoadAUndefinedConfiguration({
-    assert,
-  }: TestContext) {
-    const { DoesNotThrowNotFound } = await import('#tests/Stubs/classes/DoesNotThrowNotFound')
+  public async shouldNotThrowExceptionIfDefaultValueIsSetWhenTryingToLoadAUndefinedConfiguration({ assert }: Context) {
+    const { DoesNotThrowNotFound } = await import('#tests/stubs/classes/DoesNotThrowNotFound')
 
     const doesNotThrowNotFound = new DoesNotThrowNotFound()
 
@@ -58,8 +59,8 @@ export default class ValueTest {
   @Test()
   public async shouldBeAbleToSetDifferentValuesToConfigurationsWithoutChangingTheOnesAlreadySetInClass({
     assert,
-  }: TestContext) {
-    const { AppService } = await import('#tests/Stubs/classes/AppService')
+  }: Context) {
+    const { AppService } = await import('#tests/stubs/classes/AppService')
 
     const appService = new AppService()
 

@@ -8,8 +8,8 @@
  */
 
 import { File, Path } from '@athenna/common'
-import { EnvHelper } from '#src/Helpers/EnvHelper'
-import { Test, BeforeAll, AfterAll, TestContext, BeforeEach, Cleanup } from '@athenna/test'
+import { EnvHelper } from '#src/helpers/EnvHelper'
+import { Test, BeforeAll, AfterAll, Context, BeforeEach, Cleanup } from '@athenna/test'
 
 export default class EnvTest {
   @BeforeAll()
@@ -34,7 +34,7 @@ export default class EnvTest {
   }
 
   @Test()
-  public async shouldNotOverridePreSetEnvironmentVariables({ assert }: TestContext) {
+  public async shouldNotOverridePreSetEnvironmentVariables({ assert }: Context) {
     process.env.PRESET = 'true'
     process.env.NODE_ENV = ''
     EnvHelper.resolveFile()
@@ -46,7 +46,7 @@ export default class EnvTest {
   }
 
   @Test()
-  public async shouldOverridePreSetEnvironmentVariables({ assert }: TestContext) {
+  public async shouldOverridePreSetEnvironmentVariables({ assert }: Context) {
     process.env.OVERRIDE_ENV = 'true'
     process.env.PRESET = 'true'
     process.env.NODE_ENV = ''
@@ -59,7 +59,7 @@ export default class EnvTest {
   }
 
   @Test()
-  public async shouldBeAbleToResolveMoreThanOneEnvFilesAtSameTime({ assert }: TestContext) {
+  public async shouldBeAbleToResolveMoreThanOneEnvFilesAtSameTime({ assert }: Context) {
     process.env.NODE_ENV = ''
     EnvHelper.resolveFile()
 
@@ -71,7 +71,7 @@ export default class EnvTest {
   }
 
   @Test()
-  public async shouldBeAbleToParseTheTypeOfTheEnvironmentVariable({ assert }: TestContext) {
+  public async shouldBeAbleToParseTheTypeOfTheEnvironmentVariable({ assert }: Context) {
     process.env.NODE_ENV = ''
     EnvHelper.resolveFile()
 
@@ -84,12 +84,12 @@ export default class EnvTest {
   }
 
   @Test()
-  public async shouldBeAbleToFallbackToDefaultValuesWhenTheEnvDoesNotExist({ assert }: TestContext) {
+  public async shouldBeAbleToFallbackToDefaultValuesWhenTheEnvDoesNotExist({ assert }: Context) {
     assert.deepEqual(Env('NO_EXIST', false), false)
   }
 
   @Test()
-  public async shouldBeAbleToSetEnvValuesInsideOfOtherEnvValues({ assert }: TestContext) {
+  public async shouldBeAbleToSetEnvValuesInsideOfOtherEnvValues({ assert }: Context) {
     process.env.NODE_ENV = ''
     EnvHelper.resolveFile()
 
@@ -99,7 +99,7 @@ export default class EnvTest {
   }
 
   @Test()
-  public async shouldBeAbleToTurnOffTheAutoCastForSpecificsEnvsWhenNeeded({ assert }: TestContext) {
+  public async shouldBeAbleToTurnOffTheAutoCastForSpecificsEnvsWhenNeeded({ assert }: Context) {
     process.env.NODE_ENV = ''
     EnvHelper.resolveFile()
 
@@ -108,7 +108,7 @@ export default class EnvTest {
   }
 
   @Test()
-  public async shouldBeAbleToUseEnvWithoutAnyEnvFile({ assert }: TestContext) {
+  public async shouldBeAbleToUseEnvWithoutAnyEnvFile({ assert }: Context) {
     process.env.NODE_ENV = 'undefined'
 
     EnvHelper.resolveFile()
@@ -118,7 +118,7 @@ export default class EnvTest {
   }
 
   @Test()
-  public async shouldBeAbleToUseEnvWithoutAnyEnvFileAndOverridingValues({ assert }: TestContext) {
+  public async shouldBeAbleToUseEnvWithoutAnyEnvFileAndOverridingValues({ assert }: Context) {
     process.env.NODE_ENV = 'undefined'
     process.env.OVERRIDE_ENV = 'true'
 
@@ -129,19 +129,19 @@ export default class EnvTest {
   }
 
   @Test()
-  public async shouldBeAbleToResolveAnyEnvFilePathWithoutDependingOnNODE_ENV({ assert }: TestContext) {
+  public async shouldBeAbleToResolveAnyEnvFilePathWithoutDependingOnNODE_ENV({ assert }: Context) {
     EnvHelper.resolveFilePath(Path.stubs('.env.path'))
 
     assert.equal(Env('ENV'), 'env.path')
   }
 
   @Test()
-  public async shouldNotThrowErrorsWhenEnvFileDoesNotExist({ assert }: TestContext) {
+  public async shouldNotThrowErrorsWhenEnvFileDoesNotExist({ assert }: Context) {
     assert.isUndefined(EnvHelper.resolveFilePath(Path.stubs('.env.not-found')))
   }
 
   @Test()
-  public async shouldBeAbleToLoadTheEnvFileUsingNodeEnvVariable({ assert }: TestContext) {
+  public async shouldBeAbleToLoadTheEnvFileUsingNodeEnvVariable({ assert }: Context) {
     process.env.NODE_ENV = undefined
 
     EnvHelper.resolveFile(true)
@@ -155,7 +155,7 @@ export default class EnvTest {
   @Cleanup(async () => {
     await new File(Path.stubs('.env')).copy(Path.pwd('.env'))
   })
-  public async shouldNotTryToLoadNodeEnvIfFileDoesNotExist({ assert }: TestContext) {
+  public async shouldNotTryToLoadNodeEnvIfFileDoesNotExist({ assert }: Context) {
     await File.safeRemove(Path.pwd('.env'))
 
     process.env.NODE_ENV = undefined
@@ -171,7 +171,7 @@ export default class EnvTest {
   @Cleanup(async () => {
     await new File(Path.stubs('.env')).copy(Path.pwd('.env'))
   })
-  public async shouldNotTryToLoadNodeEnvIfEnvFileContentDoesNotHaveNODE_ENV({ assert }: TestContext) {
+  public async shouldNotTryToLoadNodeEnvIfEnvFileContentDoesNotHaveNODE_ENV({ assert }: Context) {
     const file = new File(Path.pwd('.env'))
 
     await file.setContent(file.getContentAsStringSync().replace('NODE_ENV="other"', ''))
@@ -190,7 +190,7 @@ export default class EnvTest {
   @Cleanup(async () => {
     await new File(Path.stubs('.env')).copy(Path.pwd('.env'))
   })
-  public async shouldNotLoadNodeEnvIfTheValueOfEnvFileIsNotValid({ assert }: TestContext) {
+  public async shouldNotLoadNodeEnvIfTheValueOfEnvFileIsNotValid({ assert }: Context) {
     const file = new File(Path.pwd('.env'))
 
     await file.setContent(file.getContentAsStringSync().replace('NODE_ENV="other"', 'NODE_ENV="undefined"'))

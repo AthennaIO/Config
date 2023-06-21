@@ -115,8 +115,8 @@ out
 .pnp.*
 
 # Compiled code
-./dist
-./build
+dist
+build
 *.js
 *.d.ts
 *.js.map

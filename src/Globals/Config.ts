@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Config as ConfigImpl } from '#src/Config/Config'
+import { Config as ConfigImpl } from '#src/config/Config'
 
 declare global {
   export class Config extends ConfigImpl {}

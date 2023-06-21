@@ -43,7 +43,7 @@ jobs:
         run: npm run test:coverage
 
       - name: Test code compilation
-        run: sh scripts/build
+        run: npm run build
 
   windows:
     runs-on: windows-latest
@@ -66,30 +66,4 @@ jobs:
         run: npm run test:coverage
 
       - name: Test code compilation
-        run: sh scripts/build
-
-  cov-report:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 18.x
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm run test:coverage
-
-      - name: Generate Code Coverage report
-        id: code-coverage
-        uses: barecheck/code-coverage-action@v1
-        with:
-          barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
-          lcov-file: "./tests/Coverage/lcov.info"
-          send-summary-comment: true
-          show-annotations: "warning"
+        run: npm run build
