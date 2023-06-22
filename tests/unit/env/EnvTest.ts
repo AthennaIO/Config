@@ -9,7 +9,8 @@
 
 import { File, Path } from '@athenna/common'
 import { EnvHelper } from '#src/helpers/EnvHelper'
-import { Test, BeforeAll, AfterAll, Context, BeforeEach, Cleanup } from '@athenna/test'
+import type { Context } from '@athenna/test/types'
+import { Test, BeforeAll, AfterAll, BeforeEach, Cleanup } from '@athenna/test'
 
 export default class EnvTest {
   @BeforeAll()

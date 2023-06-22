@@ -1,7 +1,8 @@
 {
   "ts-node": {
     "esm": true,
-    "transpileOnly": true
+    "transpileOnly": true,
+    "ignoreDiagnostics": [5104]
   },
   "compilerOptions": {
     "strict": false,
@@ -18,11 +19,13 @@
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
+    "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "#bin/*": ["./bin/*.ts"],
       "#src/*": ["./src/*.ts"],
-      "#tests/*": ["./tests/*.ts"]
+      "#tests/*": ["./tests/*.ts"],
+      "#src/types": ["./src/types/index.ts"]
     }
   },
   "include": ["./**/*"],
