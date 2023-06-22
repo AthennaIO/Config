@@ -33,7 +33,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToGetAllConfigurationsValuesFromConfigClass({ assert }: Context) {
+  public async shouldBeAbleToGetAllConfigurationValuesFromConfigClass({ assert }: Context) {
     const configs = Config.get()
 
     assert.deepEqual(configs.app, { name: 'Athenna', env: 'test', environments: ['default'] })

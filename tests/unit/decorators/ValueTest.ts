@@ -32,10 +32,7 @@ export default class ValueTest {
   public async shouldBeAbleToSetConfigurationValuesUsingValueDecorator({ assert }: Context) {
     const { AppService } = await import('#tests/stubs/classes/AppService')
 
-    console.log('hey')
     const appService = new AppService()
-
-    console.log(appService)
 
     assert.equal(appService.name, 'Athenna')
     assert.deepEqual(appService.app, { name: 'Athenna', env: 'example', environments: ['default'] })
