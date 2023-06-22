@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-export * from './Globals/Env.js'
-export * from './Globals/Config.js'
+export * from '#src/globals/Env'
+export * from '#src/globals/Config'
 
-export * from './Env/Env.js'
-export * from './Config/Config.js'
-export * from './Decorators/Value.js'
-export * from './Helpers/Rc.js'
-export * from './Helpers/EnvHelper.js'
+export * from '#src/env/Env'
+export * from '#src/config/Config'
+export * from '#src/decorators/Value'
+export * from '#src/helpers/Rc'
+export * from '#src/helpers/EnvHelper'

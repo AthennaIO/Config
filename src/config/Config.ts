@@ -18,9 +18,9 @@ import {
 } from '@athenna/common'
 import { loadFile, writeFile } from 'magicast'
 import { sep, parse, extname } from 'node:path'
-import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
-import { NotSupportedKeyException } from '#src/Exceptions/NotSupportedKeyException'
-import { NotValidArrayConfigException } from '#src/Exceptions/NotValidArrayConfigException'
+import { RecursiveConfigException } from '#src/exceptions/RecursiveConfigException'
+import { NotSupportedKeyException } from '#src/exceptions/NotSupportedKeyException'
+import { NotValidArrayConfigException } from '#src/exceptions/NotValidArrayConfigException'
 
 export class Config {
   /**

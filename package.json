@@ -1,6 +1,6 @@
 {
   "name": "@athenna/config",
-  "version": "3.7.1",
+  "version": "4.0.0",
   "description": "Cache and handle environment variables and config files of Athenna.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -16,6 +16,7 @@
     "athenna"
   ],
   "scripts": {
+    "build": "rimraf build && tsc --project bin/tsconfig.build.json",
     "lint:fix": "eslint \"{bin,src,tests}/**/*.ts\" --fix",
     "test": "npm run --silent lint:fix && sh node bin/test.ts",
     "test:debug": "cross-env DEBUG=api:* sh node --inspect bin/test.ts",
@@ -32,7 +33,8 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
   },
   "imports": {
     "#bin/*": "./bin/*.js",
@@ -48,9 +50,8 @@
     "syntax-error": "^1.4.0"
   },
   "devDependencies": {
-    "@athenna/common": "^3.6.0",
-    "@athenna/test": "^3.6.0",
-    "@swc/core": "^1.3.27",
+    "@athenna/common": "^4.0.0",
+    "@athenna/test": "^4.0.0",
     "@types/lodash": "^4.14.191",
     "@types/syntax-error": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
@@ -70,6 +71,7 @@
     "lint-staged": "^12.5.0",
     "prettier": "^2.8.7",
     "reflect-metadata": "^0.1.13",
+    "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
   },
@@ -81,10 +83,9 @@
     "exclude": [],
     "reporter": [
       "text-summary",
-      "lcovonly",
       "html"
     ],
-    "report-dir": "./tests/Coverage",
+    "report-dir": "./tests/coverage",
     "check-coverage": true
   },
   "husky": {
@@ -123,7 +124,9 @@
       }
     ]
   },
-  "eslintIgnore": [],
+  "eslintIgnore": [
+    "build/**/*"
+  ],
   "eslintConfig": {
     "env": {
       "es2021": true,
