@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Env as EnvImpl } from '#src/Env/Env'
+import { Env as EnvImpl } from '#src/env/Env'
 
 declare global {
   /**

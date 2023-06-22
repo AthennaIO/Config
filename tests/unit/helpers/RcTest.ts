@@ -9,7 +9,7 @@
 
 import { Rc } from '#src'
 import { File, Folder, Path } from '@athenna/common'
-import { AfterEach, Test, TestContext } from '@athenna/test'
+import { AfterEach, Test, Context } from '@athenna/test'
 
 export default class RcTest {
   private originalRcContent = new File(Path.stubs('.athennarc.json')).getContentAsStringSync()
@@ -25,7 +25,7 @@ export default class RcTest {
   }
 
   @Test()
-  public async shouldBeAbleToSetTheRcFileThatRcHelperShouldUse({ assert }: TestContext) {
+  public async shouldBeAbleToSetTheRcFileThatRcHelperShouldUse({ assert }: Context) {
     const path = Path.stubs('.athennarc.json')
 
     await Rc.setFile(path)
@@ -34,7 +34,7 @@ export default class RcTest {
   }
 
   @Test()
-  public async shouldBeAbleToSetSomeKeyValueToAnRcKey({ assert }: TestContext) {
+  public async shouldBeAbleToSetSomeKeyValueToAnRcKey({ assert }: Context) {
     const path = Path.stubs('.athennarc.json')
 
     await Rc.setFile(path)
@@ -64,7 +64,7 @@ export default class RcTest {
   }
 
   @Test()
-  public async shouldBeAbleToChangeTheEntireValueOfSomeProperty({ assert }: TestContext) {
+  public async shouldBeAbleToChangeTheEntireValueOfSomeProperty({ assert }: Context) {
     const path = Path.stubs('.athennarc.json')
 
     await Rc.setFile(path)
@@ -93,7 +93,7 @@ export default class RcTest {
   }
 
   @Test()
-  public async shouldBeAbleToPushSomeValueToAnRcArrayKey({ assert }: TestContext) {
+  public async shouldBeAbleToPushSomeValueToAnRcArrayKey({ assert }: Context) {
     const path = Path.stubs('.athennarc.json')
 
     await Rc.setFile(path)
@@ -114,7 +114,7 @@ export default class RcTest {
   }
 
   @Test()
-  public async shouldBeAbleToSetSomeKeyValueToAnRcKeyUsingAPackageJsonFile({ assert }: TestContext) {
+  public async shouldBeAbleToSetSomeKeyValueToAnRcKeyUsingAPackageJsonFile({ assert }: Context) {
     const path = Path.pwd('package.json')
 
     await Rc.setFile(path)
@@ -144,7 +144,7 @@ export default class RcTest {
   }
 
   @Test()
-  public async shouldBeAbleToChangeTheEntireValueOfSomePropertyUsingAPackageJsonFile({ assert }: TestContext) {
+  public async shouldBeAbleToChangeTheEntireValueOfSomePropertyUsingAPackageJsonFile({ assert }: Context) {
     const path = Path.pwd('package.json')
 
     await Rc.setFile(path)
@@ -173,7 +173,7 @@ export default class RcTest {
   }
 
   @Test()
-  public async shouldBeAbleToPushSomeValueToAnRcArrayKeyUsingAPackageJsonFile({ assert }: TestContext) {
+  public async shouldBeAbleToPushSomeValueToAnRcArrayKeyUsingAPackageJsonFile({ assert }: Context) {
     const path = Path.pwd('package.json')
 
     await Rc.setFile(path)
@@ -194,7 +194,7 @@ export default class RcTest {
   }
 
   @Test()
-  public async shouldBeAbleToSetSomeKeyValueToAnRcKeyUsingAModuleFile({ assert }: TestContext) {
+  public async shouldBeAbleToSetSomeKeyValueToAnRcKeyUsingAModuleFile({ assert }: Context) {
     const path = Path.stubs('rc.ts')
 
     await Rc.setFile(path)
@@ -216,7 +216,7 @@ export default class RcTest {
   }
 
   @Test()
-  public async shouldBeAbleToChangeTheEntireValueOfSomePropertyUsingAModuleFile({ assert }: TestContext) {
+  public async shouldBeAbleToChangeTheEntireValueOfSomePropertyUsingAModuleFile({ assert }: Context) {
     const path = Path.stubs('rc.ts')
 
     await Rc.setFile(path)
@@ -237,7 +237,7 @@ export default class RcTest {
   }
 
   @Test()
-  public async shouldBeAbleToPushSomeValueToAnRcArrayKeyUsingAModuleFile({ assert }: TestContext) {
+  public async shouldBeAbleToPushSomeValueToAnRcArrayKeyUsingAModuleFile({ assert }: Context) {
     const path = Path.stubs('rc.ts')
 
     await Rc.setFile(path)

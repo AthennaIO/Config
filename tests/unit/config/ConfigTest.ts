@@ -9,10 +9,10 @@
 
 import { sep } from 'node:path'
 import { File, Folder, Path } from '@athenna/common'
-import { Test, TestContext, Cleanup, BeforeEach, AfterEach } from '@athenna/test'
-import { RecursiveConfigException } from '#src/Exceptions/RecursiveConfigException'
-import { NotSupportedKeyException } from '#src/Exceptions/NotSupportedKeyException'
-import { NotValidArrayConfigException } from '#src/Exceptions/NotValidArrayConfigException'
+import { Test, Context, Cleanup, BeforeEach, AfterEach } from '@athenna/test'
+import { RecursiveConfigException } from '#src/exceptions/RecursiveConfigException'
+import { NotSupportedKeyException } from '#src/exceptions/NotSupportedKeyException'
+import { NotValidArrayConfigException } from '#src/exceptions/NotValidArrayConfigException'
 
 export default class ConfigTest {
   @BeforeEach()
@@ -33,7 +33,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToGetAllConfigurationsValuesFromConfigClass({ assert }: TestContext) {
+  public async shouldBeAbleToGetAllConfigurationValuesFromConfigClass({ assert }: Context) {
     const configs = Config.get()
 
     assert.deepEqual(configs.app, { name: 'Athenna', env: 'test', environments: ['default'] })
@@ -41,7 +41,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToGetFullConfigurationsValuesOfOneFileFromConfigClass({ assert }: TestContext) {
+  public async shouldBeAbleToGetFullConfigurationsValuesOfOneFileFromConfigClass({ assert }: Context) {
     const app = Config.get('app')
 
     assert.deepEqual(app, {
@@ -52,19 +52,19 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToFallbackToDefaultValuesWhenTheConfigDoesNotExist({ assert }: TestContext) {
+  public async shouldBeAbleToFallbackToDefaultValuesWhenTheConfigDoesNotExist({ assert }: Context) {
     assert.equal(Config.get('http.noExist', 'Hello World'), 'Hello World')
     assert.equal(Config.get('noExistConfig.test', 'Hello World'), 'Hello World')
   }
 
   @Test()
-  public async shouldBeAbleToCreateALoadChainWhenAConfigurationUsesOtherConfiguration({ assert }: TestContext) {
+  public async shouldBeAbleToCreateALoadChainWhenAConfigurationUsesOtherConfiguration({ assert }: Context) {
     assert.equal(Config.get('app.name'), 'Athenna')
     assert.equal(Config.get('database.username'), 'Athenna')
   }
 
   @Test()
-  public async shouldBeAbleToVerifyConfigurationsExistence({ assert }: TestContext) {
+  public async shouldBeAbleToVerifyConfigurationsExistence({ assert }: Context) {
     assert.isTrue(Config.exists('app.name'))
     assert.isTrue(Config.existsAll('app.name', 'app.env'))
     assert.isFalse(Config.exists('notFound'))
@@ -74,7 +74,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToVerifyConfigurationsNegativeExistence({ assert }: TestContext) {
+  public async shouldBeAbleToVerifyConfigurationsNegativeExistence({ assert }: Context) {
     assert.isFalse(Config.notExists('app.name'))
     assert.isFalse(Config.notExistsAll('app.name', 'app.env'))
     assert.isTrue(Config.notExists('notFound'))
@@ -84,7 +84,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToVerifyIfConfigurationsHasSomeValue({ assert }: TestContext) {
+  public async shouldBeAbleToVerifyIfConfigurationsHasSomeValue({ assert }: Context) {
     assert.isTrue(Config.is('app.name', 'Athenna'))
     assert.isTrue(Config.is('app.name', 'Wrong', 'WrongAgain', 'Athenna'))
     assert.isTrue(Config.is('app.name', ['Wrong', 'WrongAgain', 'Athenna']))
@@ -93,7 +93,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToVerifyIfConfigurationsHasNotSomeValue({ assert }: TestContext) {
+  public async shouldBeAbleToVerifyIfConfigurationsHasNotSomeValue({ assert }: Context) {
     assert.isFalse(Config.isNot('app.name', 'Athenna'))
     assert.isFalse(Config.isNot('app.name', 'Wrong', 'WrongAgain', 'Athenna'))
     assert.isTrue(Config.isNot('notFound', 'Athenna'))
@@ -101,7 +101,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToSetValuesInConfigurations({ assert }: TestContext) {
+  public async shouldBeAbleToSetValuesInConfigurations({ assert }: Context) {
     const mainConfig = Config.get('app')
 
     Config.set('app.name.mainName', 'Athenna')
@@ -128,7 +128,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToSafeSetValuesInConfigurations({ assert }: TestContext) {
+  public async shouldBeAbleToSafeSetValuesInConfigurations({ assert }: Context) {
     const mainConfig = Config.get('app')
 
     Config.set('app.name.mainName', 'Athenna')
@@ -142,7 +142,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToPushValuesToConfigurationsThatAreArrays({ assert }: TestContext) {
+  public async shouldBeAbleToPushValuesToConfigurationsThatAreArrays({ assert }: Context) {
     Config.push('app.environments', 'http')
     Config.push('app.environments', ['repl', 'console'])
 
@@ -150,7 +150,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToPushValuesToConfigurationsThatDoesNotExist({ assert }: TestContext) {
+  public async shouldBeAbleToPushValuesToConfigurationsThatDoesNotExist({ assert }: Context) {
     Config.push('app.newArray', 'http')
     Config.push('app.newArrayArray', ['repl', 'console'])
 
@@ -159,12 +159,12 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldThrowAnExceptionIfTryingToPushValueToAConfigurationThatIsNotAnArray({ assert }: TestContext) {
+  public async shouldThrowAnExceptionIfTryingToPushValueToAConfigurationThatIsNotAnArray({ assert }: Context) {
     assert.throws(() => Config.push('app.name', 'http'), NotValidArrayConfigException)
   }
 
   @Test()
-  public async shouldBeAbleToDeleteValuesFromConfigurations({ assert }: TestContext) {
+  public async shouldBeAbleToDeleteValuesFromConfigurations({ assert }: Context) {
     Config.delete('notFound')
 
     const mainConfig = Config.get('app')
@@ -188,14 +188,14 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldThrownAnErrorWhenLoadingAConfigurationFileThatRecursivelyLoadsOther({ assert }: TestContext) {
+  public async shouldThrownAnErrorWhenLoadingAConfigurationFileThatRecursivelyLoadsOther({ assert }: Context) {
     const useCase = async () => await Config.load(Path.stubs('config/recursiveOne.ts'))
 
     await assert.rejects(useCase, RecursiveConfigException)
   }
 
   @Test()
-  public async shouldNotLoadMapAndDTSFiles({ assert }: TestContext) {
+  public async shouldNotLoadMapAndDTSFiles({ assert }: Context) {
     await Config.load(Path.config('app.d.ts'))
     await Config.load(Path.config('app.js.map'))
 
@@ -203,7 +203,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToReloadConfigurationValues({ assert }: TestContext) {
+  public async shouldBeAbleToReloadConfigurationValues({ assert }: Context) {
     assert.equal(Config.get('app.env'), 'test')
 
     process.env.NODE_ENV = 'example'
@@ -217,7 +217,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInLoad({ assert }: TestContext) {
+  public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInLoad({ assert }: Context) {
     const path = Path.stubs('not-found.ts')
 
     assert.isFalse(await File.exists(path))
@@ -225,7 +225,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInSafeLoad({ assert }: TestContext) {
+  public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInSafeLoad({ assert }: Context) {
     const path = Path.stubs('not-found.ts')
 
     assert.isFalse(await File.exists(path))
@@ -233,7 +233,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInLoadAll({ assert }: TestContext) {
+  public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInLoadAll({ assert }: Context) {
     const path = Path.stubs('not-found/path')
 
     assert.isFalse(await Folder.exists(path))
@@ -242,7 +242,7 @@ export default class ConfigTest {
 
   @Test()
   @Cleanup(() => Config.delete('app'))
-  public async shouldBeAbleToLoadAllConfigurationPathSafely({ assert }: TestContext) {
+  public async shouldBeAbleToLoadAllConfigurationPathSafely({ assert }: Context) {
     Config.set('app', {})
 
     await Config.loadAll(Path.config(), true)
@@ -252,7 +252,7 @@ export default class ConfigTest {
 
   @Test()
   @Cleanup(() => Config.delete('app'))
-  public async shouldBeAbleToLoadASingleFileInLoadAllMethod({ assert }: TestContext) {
+  public async shouldBeAbleToLoadASingleFileInLoadAllMethod({ assert }: Context) {
     Config.set('app', {})
 
     await Config.loadAll(Path.config('app.ts'), true)
@@ -262,7 +262,7 @@ export default class ConfigTest {
 
   @Test()
   @Cleanup(() => (process.env.IS_TS = 'true'))
-  public async shouldBeAbleToLoadAllJsFilesButNotTsFilesWhenEnvTsIsFalse({ assert }: TestContext) {
+  public async shouldBeAbleToLoadAllJsFilesButNotTsFilesWhenEnvTsIsFalse({ assert }: Context) {
     process.env.IS_TS = 'false'
 
     Config.clear()
@@ -273,7 +273,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToLoadConfigFoldersRecursively({ assert }: TestContext) {
+  public async shouldBeAbleToLoadConfigFoldersRecursively({ assert }: Context) {
     Config.clear()
 
     await Config.loadAll(Path.stubs('recursive'), false)
@@ -283,7 +283,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldBeAbleToRewriteTheConfigFileAndSaveModifications({ assert }: TestContext) {
+  public async shouldBeAbleToRewriteTheConfigFileAndSaveModifications({ assert }: Context) {
     const folder = await new Folder(Path.stubs('recursive')).copy(Path.stubs('recursive-copy'), { withContent: true })
 
     Config.clear()
@@ -306,7 +306,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldThrowAnExceptionIfCallingRewriteMethodWithABadKey({ assert }: TestContext) {
+  public async shouldThrowAnExceptionIfCallingRewriteMethodWithABadKey({ assert }: Context) {
     const folder = await new Folder(Path.stubs('recursive')).copy(Path.stubs('recursive-copy'), { withContent: true })
 
     Config.clear()
@@ -317,7 +317,7 @@ export default class ConfigTest {
   }
 
   @Test()
-  public async shouldThrowAnExceptionIfCallingRewriteMethodWithANotFoundKey({ assert }: TestContext) {
+  public async shouldThrowAnExceptionIfCallingRewriteMethodWithANotFoundKey({ assert }: Context) {
     const folder = await new Folder(Path.stubs('recursive')).copy(Path.stubs('recursive-copy'), { withContent: true })
 
     Config.clear()
