@@ -8,8 +8,9 @@
  */
 
 import { sep } from 'node:path'
+import type { Context } from '@athenna/test/types'
 import { File, Folder, Path } from '@athenna/common'
-import { Test, Context, Cleanup, BeforeEach, AfterEach } from '@athenna/test'
+import { Test, Cleanup, BeforeEach, AfterEach } from '@athenna/test'
 import { RecursiveConfigException } from '#src/exceptions/RecursiveConfigException'
 import { NotSupportedKeyException } from '#src/exceptions/NotSupportedKeyException'
 import { NotValidArrayConfigException } from '#src/exceptions/NotValidArrayConfigException'

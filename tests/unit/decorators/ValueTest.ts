@@ -7,8 +7,9 @@
  * file that was distributed with this source code.
  */
 
+import type { Context } from '@athenna/test/types'
 import { File, Folder, Path } from '@athenna/common'
-import { Test, Context, BeforeEach, AfterEach } from '@athenna/test'
+import { Test, BeforeEach, AfterEach } from '@athenna/test'
 import { NotFoundConfigException } from '#src/exceptions/NotFoundConfigException'
 
 export default class ValueTest {
