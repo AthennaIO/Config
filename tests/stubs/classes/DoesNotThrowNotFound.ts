@@ -1,4 +1,4 @@
-import { Value } from '#src/decorators/Value'
+import { Value } from '#src/annotations/Value'
 
 export class DoesNotThrowNotFound {
   @Value('app.notFound', null)

@@ -12,7 +12,7 @@ import { File, Folder, Path } from '@athenna/common'
 import { Test, BeforeEach, AfterEach } from '@athenna/test'
 import { NotFoundConfigException } from '#src/exceptions/NotFoundConfigException'
 
-export default class ValueTest {
+export default class ValueAnnotationTest {
   @BeforeEach()
   public async beforeEach() {
     await new Folder(Path.stubs('config')).copy(Path.config())
@@ -30,7 +30,7 @@ export default class ValueTest {
   }
 
   @Test()
-  public async shouldBeAbleToSetConfigurationValuesUsingValueDecorator({ assert }: Context) {
+  public async shouldBeAbleToSetConfigurationValuesUsingValueAnnotation({ assert }: Context) {
     const { AppService } = await import('#tests/stubs/classes/AppService')
 
     const appService = new AppService()
