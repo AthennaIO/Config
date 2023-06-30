@@ -12,6 +12,6 @@ export * from '#src/globals/Config'
 
 export * from '#src/env/Env'
 export * from '#src/config/Config'
-export * from '#src/decorators/Value'
+export * from '#src/annotations/Value'
 export * from '#src/helpers/Rc'
 export * from '#src/helpers/EnvHelper'

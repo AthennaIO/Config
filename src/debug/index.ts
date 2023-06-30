@@ -1,14 +1,12 @@
 /**
  * @athenna/config
  *
- * (c) João Lenon <lenonSec7@gmail.com>
+ * (c) João Lenon <lenon@athenna.io>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-import { Config } from '#src'
+import { debuglog } from 'node:util'
 
-export default {
-  value: Config.get('recursiveTwo.value'),
-}
+export const debug = debuglog('athenna:config')

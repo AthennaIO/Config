@@ -18,18 +18,13 @@ import { NotValidArrayConfigException } from '#src/exceptions/NotValidArrayConfi
 export default class ConfigTest {
   @BeforeEach()
   public async beforeEach() {
-    await new Folder(Path.stubs('config')).copy(Path.config())
-    await new File(Path.config('recursiveOne.ts')).remove()
-    await new File(Path.config('recursiveTwo.ts')).remove()
-    await new File(Path.config('notNormalized.ts')).remove()
-
-    await Config.loadAll()
+    await Config.load(Path.stubs('config/app.ts'))
+    await Config.load(Path.stubs('config/database.ts'))
   }
 
   @AfterEach()
   public async afterEach() {
     Config.clear()
-    await Folder.safeRemove(Path.config())
     await Folder.safeRemove(Path.stubs('recursive-copy'))
   }
 
@@ -207,12 +202,12 @@ export default class ConfigTest {
   public async shouldBeAbleToReloadConfigurationValues({ assert }: Context) {
     assert.equal(Config.get('app.env'), 'test')
 
-    process.env.NODE_ENV = 'example'
+    process.env.APP_ENV = 'example'
 
     Config.clear()
 
-    await Config.safeLoad(Path.config('app.ts'))
-    await Config.safeLoad(Path.config('database.ts'))
+    await Config.safeLoad(Path.stubs('config/app.ts'))
+    await Config.safeLoad(Path.stubs('config/database.ts'))
 
     assert.equal(Config.get('app.env'), 'example')
   }

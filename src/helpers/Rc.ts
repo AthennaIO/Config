@@ -9,6 +9,7 @@
 
 import { loadFile, writeFile } from 'magicast'
 import { File, ObjectBuilder } from '@athenna/common'
+import { debug } from '#src/debug/index'
 
 export class Rc {
   public static file: File
@@ -28,6 +29,8 @@ export class Rc {
 
     this.file = await new File(path).load()
 
+    debug('RC file loaded: %s', path)
+
     const json = this.file.getContentAsJsonSync()
 
     if (json === null) {
@@ -45,6 +48,7 @@ export class Rc {
     }
 
     if (this.file.base === 'package.json') {
+      debug('Using the "athenna" property of package.json file as RC content.')
       this.content.set(json.athenna)
     } else {
       this.content.set(json)
@@ -55,7 +59,7 @@ export class Rc {
 
   /**
    * Set or subscribe a KEY:VALUE property in some property of the RC configuration file.
-   * You can also pass any value as second parameter to set multiple properties at once.
+   * You can also pass any value as a second parameter to set multiple properties at once.
    *
    * @example
    * ```ts
@@ -129,9 +133,7 @@ export class Rc {
       return
     }
 
-    let athennaRcJson = await this.file.getContentAsJson()
-
-    athennaRcJson = this.content.get()
+    const athennaRcJson = this.content.get()
 
     await this.file.setContent(this.toStringJson(athennaRcJson))
   }
@@ -144,7 +146,8 @@ export class Rc {
   }
 
   /**
-   * Verify if file is a module or not.
+   * Verify if the file is a module or not.
+   * TODO: move to @athenna/common.
    */
   private static isModule() {
     if (this.file.extension === '.js') {
