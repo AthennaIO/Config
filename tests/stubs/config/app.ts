@@ -10,5 +10,5 @@
 export default {
   name: 'Athenna',
   environments: ['default'],
-  env: Env('NODE_ENV', 'test'),
+  env: Env('APP_ENV', 'test'),
 }

@@ -9,5 +9,5 @@
 
 export default {
   name: 'AthennaTS',
-  env: Env('NODE_ENV', 'test'),
+  env: Env('APP_ENV', 'test'),
 }

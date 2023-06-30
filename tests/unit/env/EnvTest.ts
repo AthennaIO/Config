@@ -10,7 +10,7 @@
 import { File, Path } from '@athenna/common'
 import { EnvHelper } from '#src/helpers/EnvHelper'
 import type { Context } from '@athenna/test/types'
-import { Test, BeforeAll, AfterAll, BeforeEach, Cleanup } from '@athenna/test'
+import { Test, BeforeAll, AfterAll, BeforeEach, Cleanup, AfterEach } from '@athenna/test'
 
 export default class EnvTest {
   @BeforeAll()
@@ -29,18 +29,22 @@ export default class EnvTest {
 
   @BeforeEach()
   public async beforeEach() {
-    Object.keys(process.env).forEach(key => delete process.env[key])
+    process.env = {}
+    process.env.APP_ENV = 'test'
+  }
 
-    process.env.NODE_ENV = 'test'
+  @AfterEach()
+  public async afterEach() {
+    process.env = {}
   }
 
   @Test()
   public async shouldNotOverridePreSetEnvironmentVariables({ assert }: Context) {
     process.env.PRESET = 'true'
-    process.env.NODE_ENV = ''
+    process.env.APP_ENV = ''
     EnvHelper.resolveFile()
 
-    process.env.NODE_ENV = 'testing'
+    process.env.APP_ENV = 'testing'
     EnvHelper.resolveFile()
 
     assert.equal(Env('PRESET'), true)
@@ -50,10 +54,10 @@ export default class EnvTest {
   public async shouldOverridePreSetEnvironmentVariables({ assert }: Context) {
     process.env.OVERRIDE_ENV = 'true'
     process.env.PRESET = 'true'
-    process.env.NODE_ENV = ''
+    process.env.APP_ENV = ''
     EnvHelper.resolveFile()
 
-    process.env.NODE_ENV = 'testing'
+    process.env.APP_ENV = 'testing'
     EnvHelper.resolveFile()
 
     assert.equal(Env('PRESET'), false)
@@ -61,10 +65,10 @@ export default class EnvTest {
 
   @Test()
   public async shouldBeAbleToResolveMoreThanOneEnvFilesAtSameTime({ assert }: Context) {
-    process.env.NODE_ENV = ''
+    process.env.APP_ENV = ''
     EnvHelper.resolveFile()
 
-    process.env.NODE_ENV = 'testing'
+    process.env.APP_ENV = 'testing'
     EnvHelper.resolveFile()
 
     assert.equal(Env('ENV'), 'production')
@@ -73,7 +77,7 @@ export default class EnvTest {
 
   @Test()
   public async shouldBeAbleToParseTheTypeOfTheEnvironmentVariable({ assert }: Context) {
-    process.env.NODE_ENV = ''
+    process.env.APP_ENV = ''
     EnvHelper.resolveFile()
 
     assert.strictEqual(Env('NUMBER_ENV'), 10)
@@ -91,7 +95,7 @@ export default class EnvTest {
 
   @Test()
   public async shouldBeAbleToSetEnvValuesInsideOfOtherEnvValues({ assert }: Context) {
-    process.env.NODE_ENV = ''
+    process.env.APP_ENV = ''
     EnvHelper.resolveFile()
 
     assert.equal(Env('ENV_IN_ENV'), '10-true')
@@ -101,7 +105,7 @@ export default class EnvTest {
 
   @Test()
   public async shouldBeAbleToTurnOffTheAutoCastForSpecificsEnvsWhenNeeded({ assert }: Context) {
-    process.env.NODE_ENV = ''
+    process.env.APP_ENV = ''
     EnvHelper.resolveFile()
 
     assert.equal(Env('NUMBER_ENV', '10', false), '10')
@@ -110,27 +114,27 @@ export default class EnvTest {
 
   @Test()
   public async shouldBeAbleToUseEnvWithoutAnyEnvFile({ assert }: Context) {
-    process.env.NODE_ENV = 'undefined'
+    process.env.APP_ENV = 'undefined'
 
     EnvHelper.resolveFile()
 
-    assert.equal(Env('NODE_ENV'), 'undefined')
+    assert.equal(Env('APP_ENV'), 'undefined')
     assert.isUndefined(Env('OTHER_DEFINED'))
   }
 
   @Test()
   public async shouldBeAbleToUseEnvWithoutAnyEnvFileAndOverridingValues({ assert }: Context) {
-    process.env.NODE_ENV = 'undefined'
+    process.env.APP_ENV = 'undefined'
     process.env.OVERRIDE_ENV = 'true'
 
     EnvHelper.resolveFile()
 
-    assert.equal(Env('NODE_ENV'), 'other')
+    assert.equal(Env('APP_ENV'), 'other')
     assert.isUndefined(Env('OTHER_DEFINED'))
   }
 
   @Test()
-  public async shouldBeAbleToResolveAnyEnvFilePathWithoutDependingOnNODE_ENV({ assert }: Context) {
+  public async shouldBeAbleToResolveAnyEnvFilePathWithoutDependingOnAPP_ENV({ assert }: Context) {
     EnvHelper.resolveFilePath(Path.stubs('.env.path'))
 
     assert.equal(Env('ENV'), 'env.path')
@@ -143,12 +147,12 @@ export default class EnvTest {
 
   @Test()
   public async shouldBeAbleToLoadTheEnvFileUsingNodeEnvVariable({ assert }: Context) {
-    process.env.NODE_ENV = undefined
+    process.env.APP_ENV = undefined
 
     EnvHelper.resolveFile(true)
 
     assert.isUndefined(Env('NUMBER_ENV'))
-    assert.equal(Env('NODE_ENV'), 'other')
+    assert.equal(Env('APP_ENV'), 'other')
     assert.equal(Env('OTHER_DEFINED'), true)
   }
 
@@ -159,12 +163,13 @@ export default class EnvTest {
   public async shouldNotTryToLoadNodeEnvIfFileDoesNotExist({ assert }: Context) {
     await File.safeRemove(Path.pwd('.env'))
 
+    process.env.APP_ENV = undefined
     process.env.NODE_ENV = undefined
 
     EnvHelper.resolveFile(true)
 
+    assert.isUndefined(Env('APP_ENV'))
     assert.isUndefined(Env('NUMBER_ENV'))
-    assert.equal(Env('NODE_ENV'), 'undefined')
     assert.isUndefined(Env('OTHER_DEFINED'))
   }
 
@@ -172,19 +177,20 @@ export default class EnvTest {
   @Cleanup(async () => {
     await new File(Path.stubs('.env')).copy(Path.pwd('.env'))
   })
-  public async shouldNotTryToLoadNodeEnvIfEnvFileContentDoesNotHaveNODE_ENV({ assert }: Context) {
+  public async shouldNotTryToLoadNodeEnvIfEnvFileContentDoesNotHaveAPP_ENV({ assert }: Context) {
     const file = new File(Path.pwd('.env'))
 
-    await file.setContent(file.getContentAsStringSync().replace('NODE_ENV="other"', ''))
+    await file.setContent(file.getContentAsStringSync().replace('APP_ENV="other"', ''))
 
+    process.env.APP_ENV = undefined
     process.env.NODE_ENV = undefined
-    process.env.OVERRIDE_ENV = '(true)'
+    process.env.OVERRIDE_ENV = 'true'
 
     EnvHelper.resolveFile(true)
 
+    assert.isUndefined(Env('APP_ENV'))
     assert.isDefined(Env('NUMBER_ENV'))
     assert.isUndefined(Env('OTHER_DEFINED'))
-    assert.equal(Env('NODE_ENV'), 'undefined')
   }
 
   @Test()
@@ -194,15 +200,15 @@ export default class EnvTest {
   public async shouldNotLoadNodeEnvIfTheValueOfEnvFileIsNotValid({ assert }: Context) {
     const file = new File(Path.pwd('.env'))
 
-    await file.setContent(file.getContentAsStringSync().replace('NODE_ENV="other"', 'NODE_ENV="undefined"'))
+    await file.setContent(file.getContentAsStringSync().replace('APP_ENV="other"', 'APP_ENV="undefined"'))
 
-    process.env.NODE_ENV = undefined
+    process.env.APP_ENV = undefined
     process.env.OVERRIDE_ENV = '(true)'
 
     EnvHelper.resolveFile(true)
 
     assert.isDefined(Env('NUMBER_ENV'))
     assert.isUndefined(Env('OTHER_DEFINED'))
-    assert.equal(Env('NODE_ENV'), 'undefined')
+    assert.equal(Env('APP_ENV'), 'undefined')
   }
 }

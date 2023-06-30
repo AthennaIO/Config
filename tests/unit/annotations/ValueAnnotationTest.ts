@@ -7,26 +7,20 @@
  * file that was distributed with this source code.
  */
 
+import { Path } from '@athenna/common'
 import type { Context } from '@athenna/test/types'
-import { File, Folder, Path } from '@athenna/common'
 import { Test, BeforeEach, AfterEach } from '@athenna/test'
 import { NotFoundConfigException } from '#src/exceptions/NotFoundConfigException'
 
 export default class ValueAnnotationTest {
   @BeforeEach()
   public async beforeEach() {
-    await new Folder(Path.stubs('config')).copy(Path.config())
-    await new File(Path.config('recursiveOne.ts')).remove()
-    await new File(Path.config('recursiveTwo.ts')).remove()
-    await new File(Path.config('notNormalized.ts')).remove()
-
-    await Config.loadAll()
+    await Config.load(Path.stubs('config/app.ts'))
   }
 
   @AfterEach()
   public async afterEach() {
     Config.clear()
-    await Folder.safeRemove(Path.config())
   }
 
   @Test()
@@ -36,7 +30,7 @@ export default class ValueAnnotationTest {
     const appService = new AppService()
 
     assert.equal(appService.name, 'Athenna')
-    assert.deepEqual(appService.app, { name: 'Athenna', env: 'example', environments: ['default'] })
+    assert.deepEqual(appService.app, { name: 'Athenna', env: 'test', environments: ['default'] })
   }
 
   @Test()
@@ -65,6 +59,6 @@ export default class ValueAnnotationTest {
     Config.set('app.name', 'Athenna Framework')
 
     assert.equal(appService.name, 'Athenna')
-    assert.deepEqual(appService.app, { name: 'Athenna', env: 'example', environments: ['default'] })
+    assert.deepEqual(appService.app, { name: 'Athenna', env: 'test', environments: ['default'] })
   }
 }

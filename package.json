@@ -1,6 +1,6 @@
 {
   "name": "@athenna/config",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "Cache and handle environment variables and config files of Athenna.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -19,7 +19,7 @@
     "build": "rimraf build && tsc --project bin/tsconfig.build.json",
     "lint:fix": "eslint \"{bin,src,tests}/**/*.ts\" --fix",
     "test": "npm run --silent lint:fix && sh node bin/test.ts",
-    "test:debug": "cross-env DEBUG=api:* sh node --inspect bin/test.ts",
+    "test:debug": "cross-env NODE_DEBUG=athenna:* sh node --inspect bin/test.ts",
     "test:coverage": "c8 npm run --silent test"
   },
   "files": [
@@ -43,23 +43,24 @@
     "#src/*": "./src/*.js",
     "#src": "./src/index.js",
     "#src/types": "./src/types/index.js",
+    "#src/debug": "./src/debug/index.js",
     "#tests/*": "./tests/*.js",
     "#tests": "./tests/index.js"
   },
   "dependencies": {
-    "dotenv": "^16.1.0",
-    "magicast": "^0.2.2",
+    "dotenv": "^16.3.1",
+    "magicast": "^0.2.9",
     "syntax-error": "^1.4.0"
   },
   "devDependencies": {
-    "@athenna/common": "^4.1.0",
-    "@athenna/test": "^4.1.0",
+    "@athenna/common": "^4.2.0",
+    "@athenna/test": "^4.2.0",
     "@types/lodash": "^4.14.191",
     "@types/syntax-error": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
-    "c8": "^7.12.0",
-    "commitizen": "^4.2.6",
+    "c8": "^8.0.0",
+    "commitizen": "^4.3.0",
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.36.0",

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Config } from '#src/index'
+import { Config } from '#src'
 
 export default {
   // eslint-disable-next-line prettier/prettier
