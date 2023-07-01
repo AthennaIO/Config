@@ -83,7 +83,9 @@
     "include": [
       "src/**/*.ts"
     ],
-    "exclude": [],
+    "exclude": [
+      "src/types"
+    ],
     "reporter": [
       "text-summary",
       "html"
