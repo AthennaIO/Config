@@ -120,9 +120,9 @@ build
 *.js
 *.d.ts
 *.js.map
-!tests/Stubs/**/*.js
-!tests/Stubs/**/*.d.ts
-!tests/Stubs/**/*.js.map
+!tests/stubs/**/*.js
+!tests/stubs/**/*.d.ts
+!tests/stubs/**/*.js.map
 
 # IDE
 .idea
