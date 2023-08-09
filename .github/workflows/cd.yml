@@ -25,10 +25,16 @@ jobs:
         run: npm run build
 
       - name: Copy README to build
-        run: cp README.md build/README.md
+        run: cp README.md build/README.md | true
 
       - name: Copy LICENSE to build
-        run: cp LICENSE.md build/LICENSE.md
+        run: cp LICENSE.md build/LICENSE.md | true
+
+      - name: Copy templates to build
+        run: cp -r templates build/templates | true
+
+      - name: Copy configurer to build
+        run: cp -r configurer build/configurer | true
 
       - name: Automatic GitHub Release
         uses: justincy/github-action-npm-release@2.0.1
