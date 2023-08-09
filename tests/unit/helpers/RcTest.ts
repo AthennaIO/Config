@@ -8,9 +8,8 @@
  */
 
 import { Rc } from '#src'
-import { AfterEach, Test } from '@athenna/test'
-import type { Context } from '@athenna/test/types'
 import { File, Folder, Path } from '@athenna/common'
+import { Test, AfterEach, type Context } from '@athenna/test'
 
 export default class RcTest {
   private originalRcContent = new File(Path.stubs('.athennarc.json')).getContentAsStringSync()
