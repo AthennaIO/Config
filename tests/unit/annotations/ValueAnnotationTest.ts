@@ -8,8 +8,7 @@
  */
 
 import { Path } from '@athenna/common'
-import type { Context } from '@athenna/test/types'
-import { Test, BeforeEach, AfterEach } from '@athenna/test'
+import { Test, BeforeEach, AfterEach, type Context } from '@athenna/test'
 import { NotFoundConfigException } from '#src/exceptions/NotFoundConfigException'
 
 export default class ValueAnnotationTest {

@@ -1,6 +1,6 @@
 {
   "name": "@athenna/config",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "Cache and handle environment variables and config files of Athenna.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -27,7 +27,8 @@
     "src/*.d.ts",
     "src/**/*.js",
     "src/**/*.d.ts",
-    "templates"
+    "templates",
+    "configurer"
   ],
   "type": "module",
   "main": "./src/index.js",
@@ -53,8 +54,8 @@
     "syntax-error": "^1.4.0"
   },
   "devDependencies": {
-    "@athenna/common": "^4.2.0",
-    "@athenna/test": "^4.2.0",
+    "@athenna/common": "^4.5.0",
+    "@athenna/test": "^4.4.0",
     "@types/lodash": "^4.14.191",
     "@types/syntax-error": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
@@ -83,7 +84,9 @@
     "include": [
       "src/**/*.ts"
     ],
-    "exclude": [],
+    "exclude": [
+      "src/types"
+    ],
     "reporter": [
       "text-summary",
       "html"
