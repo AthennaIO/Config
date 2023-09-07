@@ -10,5 +10,5 @@
 import { Config } from '#src'
 
 export default {
-  value: Config.get('recursiveTwo.value'),
+  value: Config.get('recursiveTwo.value')
 }

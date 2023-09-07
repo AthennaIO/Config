@@ -14,7 +14,7 @@ import {
   ObjectBuilder,
   Exec,
   Module,
-  Is,
+  Is
 } from '@athenna/common'
 import { debug } from '#src/debug'
 import { loadFile, writeFile } from 'magicast'
@@ -30,7 +30,7 @@ export class Config {
   public static configs: ObjectBuilder = Json.builder({
     ignoreNull: false,
     ignoreUndefined: true,
-    referencedValues: false,
+    referencedValues: false
   })
 
   /**
@@ -39,7 +39,7 @@ export class Config {
   public static paths: ObjectBuilder = Json.builder({
     ignoreNull: false,
     ignoreUndefined: true,
-    referencedValues: false,
+    referencedValues: false
   })
 
   public static fatherConfigPath: string = null
@@ -51,7 +51,7 @@ export class Config {
     this.configs = Json.builder({
       ignoreNull: false,
       ignoreUndefined: true,
-      referencedValues: false,
+      referencedValues: false
     })
 
     return this
@@ -188,8 +188,8 @@ export class Config {
       quote: 'single',
       tabWidth: 2,
       trailingComma: {
-        objects: true,
-      } as any,
+        objects: true
+      } as any
     })
   }
 
@@ -198,7 +198,7 @@ export class Config {
    */
   public static async loadAll(
     path = Path.config(),
-    safe = false,
+    safe = false
   ): Promise<void> {
     if (extname(path)) {
       safe ? await this.safeLoad(path) : await this.load(path)
@@ -211,7 +211,7 @@ export class Config {
     this.fatherConfigPath = path
 
     await Exec.concurrently(files, file =>
-      safe ? this.safeLoad(file.path) : this.load(file.path),
+      safe ? this.safeLoad(file.path) : this.load(file.path)
     )
   }
 
@@ -221,7 +221,7 @@ export class Config {
    */
   public static async safeLoad(
     path: string,
-    callNumber?: number,
+    callNumber?: number
   ): Promise<void> {
     if (!(await File.exists(path))) {
       return
@@ -243,7 +243,7 @@ export class Config {
     if (!(await File.exists(path))) {
       debug(
         'Configuration file path %s does not exist, and will be skipped.',
-        path,
+        path
       )
 
       return
@@ -258,7 +258,7 @@ export class Config {
     if (base.includes('.js.map') || base.includes('.d.ts')) {
       debug(
         'Configuration file %s being skipped since its extension is not valid.',
-        base,
+        base
       )
 
       return
@@ -267,7 +267,7 @@ export class Config {
     if (base.includes('.ts') && Env('IS_TS') === false) {
       debug(
         'Configuration file %s being skipped since its a TypeScript file and the application is not running in a TypeScript environment.',
-        base,
+        base
       )
 
       return
@@ -317,7 +317,7 @@ export class Config {
     debug(
       'Loading configuration file %s with configuration key as %s.',
       file.href,
-      configKey,
+      configKey
     )
 
     this.configs.set(configKey, await file.import())

@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import { Config } from '#src'
-
-export default {
-  value: Config.get('recursiveOne.value'),
+export const config = {
+  not: 'normalized'
 }

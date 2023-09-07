@@ -17,7 +17,7 @@ export class NotSupportedKeyException extends Exception {
       status: 500,
       code: 'E_NOT_SUPPORTED_KEY',
       message: `Rewriting a single key such as ({bold,yellow} "${key}") in your configuration file is not supported.`,
-      help: `To rewrite the key ({bold,yellow} "${key}") in your configuration file you can simple use the ({bold,green} "Config.set('${key}', ...)") method first. Then, you can use the ({bold,green} "Config.rewrite('${possibleConfigFileName}')") method to rewrite the entire configuration file.`,
+      help: `To rewrite the key ({bold,yellow} "${key}") in your configuration file you can simple use the ({bold,green} "Config.set('${key}', ...)") method first. Then, you can use the ({bold,green} "Config.rewrite('${possibleConfigFileName}')") method to rewrite the entire configuration file.`
     })
   }
 }

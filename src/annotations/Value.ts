@@ -19,7 +19,7 @@ export function Value(key: string, defaultValue?: any): PropertyDecorator {
   return (target: any, propKey: string | symbol) => {
     if (Is.Defined(defaultValue) || defaultValue === null) {
       Object.defineProperty(target, propKey, {
-        value: Config.get(key, defaultValue),
+        value: Config.get(key, defaultValue)
       })
 
       return

@@ -7,7 +7,8 @@
  * file that was distributed with this source code.
  */
 
+import { Config } from '#src'
+
 export default {
-  name: 'AthennaJS',
-  env: Env('NODE_ENV', 'test'),
+  value: Config.get('recursiveOne.value')
 }

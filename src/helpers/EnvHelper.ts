@@ -76,7 +76,7 @@ export class EnvHelper {
     const environment = this.getAppEnv(lookupNodeEnv)
     const configurations = {
       path: Path.pwd('.env'),
-      override: this.isToOverrideEnvs(),
+      override: this.isToOverrideEnvs()
     }
 
     if (environment) {
@@ -97,7 +97,7 @@ export class EnvHelper {
    */
   public static resolveFilePath(
     path = Path.pwd('.env'),
-    override = this.isToOverrideEnvs(),
+    override = this.isToOverrideEnvs()
   ): void {
     dotenv.config({ path, override })
   }
@@ -127,7 +127,7 @@ export class EnvHelper {
     if (this.isDefinedEnv(appEnv)) {
       debug(
         'Application environment defined by %s env variable.',
-        process.env.APP_ENV ? 'APP_ENV' : 'NODE_ENV',
+        process.env.APP_ENV ? 'APP_ENV' : 'NODE_ENV'
       )
 
       return appEnv
@@ -135,7 +135,7 @@ export class EnvHelper {
 
     if (!lookupNodeEnv) {
       debug(
-        'Lookup of APP_ENV/NODE_ENV env variables are disabled, skipping it.',
+        'Lookup of APP_ENV/NODE_ENV env variables are disabled, skipping it.'
       )
 
       return null
@@ -144,7 +144,7 @@ export class EnvHelper {
     if (!File.existsSync(Path.pwd('.env'))) {
       debug(
         'Unable to found env file at application root: %s. Skipping APP_ENV/NODE_ENV lookup.',
-        Path.pwd('.env'),
+        Path.pwd('.env')
       )
 
       return null
@@ -155,7 +155,7 @@ export class EnvHelper {
     if (!content) {
       debug(
         'File %s content is empty, Skipping APP_ENV/NODE_ENV lookup.',
-        Path.pwd('.env'),
+        Path.pwd('.env')
       )
 
       return null
@@ -197,7 +197,7 @@ export class EnvHelper {
         'Found %s env variable with value %s inside %s file, returning it as environment value.',
         envName,
         serializedValue,
-        Path.pwd(`.env.${serializedValue}`),
+        Path.pwd(`.env.${serializedValue}`)
       )
 
       return process.env[envName]

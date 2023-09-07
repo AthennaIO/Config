@@ -19,12 +19,12 @@ export class Rc {
    * Set the RC file that the Rc class should work with.
    */
   public static async setFile(
-    path = Path.pwd('.athennarc.json'),
+    path = Path.pwd('.athennarc.json')
   ): Promise<typeof Rc> {
     this.content = new ObjectBuilder({
       referencedValues: false,
       ignoreNull: false,
-      ignoreUndefined: false,
+      ignoreUndefined: false
     })
 
     this.file = await new File(path).load()
@@ -39,7 +39,7 @@ export class Rc {
       this.content = new ObjectBuilder({
         referencedValues: true,
         ignoreNull: false,
-        ignoreUndefined: false,
+        ignoreUndefined: false
       })
 
       this.content.set(mod.default)
@@ -74,7 +74,7 @@ export class Rc {
   public static setTo(
     rcKey: string,
     key: string | any,
-    value?: any,
+    value?: any
   ): typeof Rc {
     if (value) {
       value = { ...this.content.get(rcKey, {}), [key]: value }
@@ -107,7 +107,7 @@ export class Rc {
    * Save the new content in the Rc file.
    */
   public static async save(): Promise<void> {
-    if (Is.Module(this.file)) {
+    if (Is.Module(this.file.path)) {
       const mod = await loadFile(this.file.path)
 
       mod.exports.default = this.content.get()
@@ -116,8 +116,8 @@ export class Rc {
         quote: 'single',
         tabWidth: 2,
         trailingComma: {
-          objects: true,
-        } as any,
+          objects: true
+        } as any
       })
 
       return

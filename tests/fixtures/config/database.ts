@@ -7,7 +7,10 @@
  * file that was distributed with this source code.
  */
 
+import { Config } from '#src'
+
 export default {
-  name: 'AthennaTS',
-  env: Env('APP_ENV', 'test'),
+  // eslint-disable-next-line prettier/prettier
+  username: Config.get("app.name"),
+  env: Config.get('app.env')
 }
