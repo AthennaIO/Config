@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
+import { debug } from '#src/debug'
 import { loadFile, writeFile } from 'magicast'
-import { File, ObjectBuilder } from '@athenna/common'
-import { debug } from '#src/debug/index'
+import { File, Is, ObjectBuilder } from '@athenna/common'
 
 export class Rc {
   public static file: File
@@ -107,7 +107,7 @@ export class Rc {
    * Save the new content in the Rc file.
    */
   public static async save(): Promise<void> {
-    if (this.isModule()) {
+    if (Is.Module(this.file)) {
       const mod = await loadFile(this.file.path)
 
       mod.exports.default = this.content.get()
@@ -143,21 +143,5 @@ export class Rc {
    */
   private static toStringJson(value: any): string {
     return JSON.stringify(value, null, 2).concat('\n')
-  }
-
-  /**
-   * Verify if the file is a module or not.
-   * TODO: move to @athenna/common.
-   */
-  private static isModule() {
-    if (this.file.extension === '.js') {
-      return true
-    }
-
-    if (this.file.extension === '.ts') {
-      return true
-    }
-
-    return false
   }
 }
