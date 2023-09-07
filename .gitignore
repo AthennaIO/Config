@@ -133,6 +133,7 @@ build
 .env
 .env.testing
 .env.production
+!tests/fixtures/**/.env**
 
 # MacOS folder mapper file
 .DS_Store
