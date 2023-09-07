@@ -1,5 +1,5 @@
 export default {
   commands: {},
   providers: [],
-  isAthennaRc: true,
+  isAthennaRc: true
 }

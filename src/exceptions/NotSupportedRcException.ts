@@ -15,7 +15,7 @@ export class NotSupportedRcException extends Exception {
       status: 500,
       code: 'E_NOT_SUPPORTED_RC',
       message: `Rewriting the athenna rc file using ({bold,yellow} "Config.rewrite()") method is not supported.`,
-      help: `To rewrite the values of your athenna rc file you can use the ({bold,green} "Rc") helper imported from ({bold,green} "@athenna/config").`,
+      help: `To rewrite the values of your athenna rc file you can use the ({bold,green} "Rc") helper imported from ({bold,green} "@athenna/config").`
     })
   }
 }

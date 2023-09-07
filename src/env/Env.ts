@@ -17,7 +17,7 @@ import { EnvHelper } from '#src/helpers/EnvHelper'
 export function Env<T = any>(
   env: string,
   defaultValue?: any,
-  autoCast = true,
+  autoCast = true
 ): T {
   const environment = EnvHelper.setEnvInEnv(process.env[env], autoCast)
 

@@ -15,7 +15,7 @@ export class NotValidArrayConfigException extends Exception {
       status: 500,
       code: 'E_NOT_VALID_CONFIG_ARRAY',
       message: `The configuration ${key} is not a valid array, and it is not possible to push values to it.`,
-      help: `Try changing your configuration key when calling push and pushAll methods or transform the value of your configuration ${key} to an array.`,
+      help: `Try changing your configuration key when calling push and pushAll methods or transform the value of your configuration ${key} to an array.`
     })
   }
 }

@@ -17,14 +17,14 @@ import { NotValidArrayConfigException } from '#src/exceptions/NotValidArrayConfi
 export default class ConfigTest {
   @BeforeEach()
   public async beforeEach() {
-    await Config.load(Path.stubs('config/app.ts'))
-    await Config.load(Path.stubs('config/database.ts'))
+    await Config.load(Path.fixtures('config/app.ts'))
+    await Config.load(Path.fixtures('config/database.ts'))
   }
 
   @AfterEach()
   public async afterEach() {
     Config.clear()
-    await Folder.safeRemove(Path.stubs('recursive-copy'))
+    await Folder.safeRemove(Path.fixtures('recursive-copy'))
   }
 
   @Test()
@@ -42,7 +42,7 @@ export default class ConfigTest {
     assert.deepEqual(app, {
       name: 'Athenna',
       env: 'test',
-      environments: ['default'],
+      environments: ['default']
     })
   }
 
@@ -105,10 +105,10 @@ export default class ConfigTest {
     assert.deepEqual(Config.get('app'), {
       name: {
         mainName: 'Athenna',
-        subName: 'Framework',
+        subName: 'Framework'
       },
       env: 'test',
-      environments: ['default'],
+      environments: ['default']
     })
 
     Config.set('app', { hello: 'world' })
@@ -184,7 +184,7 @@ export default class ConfigTest {
 
   @Test()
   public async shouldThrownAnErrorWhenLoadingAConfigurationFileThatRecursivelyLoadsOther({ assert }: Context) {
-    const useCase = async () => await Config.load(Path.stubs('config/recursiveOne.ts'))
+    const useCase = async () => await Config.load(Path.fixtures('config/recursiveOne.ts'))
 
     await assert.rejects(useCase, RecursiveConfigException)
   }
@@ -205,15 +205,15 @@ export default class ConfigTest {
 
     Config.clear()
 
-    await Config.safeLoad(Path.stubs('config/app.ts'))
-    await Config.safeLoad(Path.stubs('config/database.ts'))
+    await Config.safeLoad(Path.fixtures('config/app.ts'))
+    await Config.safeLoad(Path.fixtures('config/database.ts'))
 
     assert.equal(Config.get('app.env'), 'example')
   }
 
   @Test()
   public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInLoad({ assert }: Context) {
-    const path = Path.stubs('not-found.ts')
+    const path = Path.fixtures('not-found.ts')
 
     assert.isFalse(await File.exists(path))
     assert.isUndefined(await Config.load(path))
@@ -221,7 +221,7 @@ export default class ConfigTest {
 
   @Test()
   public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInSafeLoad({ assert }: Context) {
-    const path = Path.stubs('not-found.ts')
+    const path = Path.fixtures('not-found.ts')
 
     assert.isFalse(await File.exists(path))
     assert.isUndefined(await Config.safeLoad(path))
@@ -229,7 +229,7 @@ export default class ConfigTest {
 
   @Test()
   public async shouldNotThrowErrorsIfConfigurationPathDoesNotExistInLoadAll({ assert }: Context) {
-    const path = Path.stubs('not-found/path')
+    const path = Path.fixtures('not-found/path')
 
     assert.isFalse(await Folder.exists(path))
     assert.isUndefined(await Config.loadAll(path))
@@ -262,7 +262,7 @@ export default class ConfigTest {
 
     Config.clear()
 
-    await Config.loadAll(Path.stubs('jsconfig'), false)
+    await Config.loadAll(Path.fixtures('jsconfig'), false)
 
     assert.equal(Config.get('app.name'), 'AthennaJS')
   }
@@ -271,7 +271,7 @@ export default class ConfigTest {
   public async shouldBeAbleToLoadConfigFoldersRecursively({ assert }: Context) {
     Config.clear()
 
-    await Config.loadAll(Path.stubs('recursive'), false)
+    await Config.loadAll(Path.fixtures('recursive'), false)
 
     assert.equal(Config.get('cli.app.type'), 'cli')
     assert.equal(Config.get('http.app.type'), 'http')
@@ -279,7 +279,9 @@ export default class ConfigTest {
 
   @Test()
   public async shouldBeAbleToRewriteTheConfigFileAndSaveModifications({ assert }: Context) {
-    const folder = await new Folder(Path.stubs('recursive')).copy(Path.stubs('recursive-copy'), { withContent: true })
+    const folder = await new Folder(Path.fixtures('recursive')).copy(Path.fixtures('recursive-copy'), {
+      withContent: true
+    })
 
     Config.clear()
 
@@ -302,7 +304,9 @@ export default class ConfigTest {
 
   @Test()
   public async shouldThrowAnExceptionIfCallingRewriteMethodWithABadKey({ assert }: Context) {
-    const folder = await new Folder(Path.stubs('recursive')).copy(Path.stubs('recursive-copy'), { withContent: true })
+    const folder = await new Folder(Path.fixtures('recursive')).copy(Path.fixtures('recursive-copy'), {
+      withContent: true
+    })
 
     Config.clear()
 
@@ -313,7 +317,9 @@ export default class ConfigTest {
 
   @Test()
   public async shouldThrowAnExceptionIfCallingRewriteMethodWithANotFoundKey({ assert }: Context) {
-    const folder = await new Folder(Path.stubs('recursive')).copy(Path.stubs('recursive-copy'), { withContent: true })
+    const folder = await new Folder(Path.fixtures('recursive')).copy(Path.fixtures('recursive-copy'), {
+      withContent: true
+    })
 
     Config.clear()
 

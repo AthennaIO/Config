@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
-export const config = {
-  not: 'normalized',
+export default {
+  name: 'AthennaTS',
+  env: Env('APP_ENV', 'test')
 }

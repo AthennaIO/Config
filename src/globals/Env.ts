@@ -18,7 +18,7 @@ declare global {
   export function Env<T = any>(
     env: string,
     defaultValue?: any,
-    autoCast?: boolean,
+    autoCast?: boolean
   ): T
 }
 

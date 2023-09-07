@@ -8,7 +8,5 @@
  */
 
 export default {
-  name: 'Athenna',
-  environments: ['default'],
-  env: Env('APP_ENV', 'test'),
+  type: 'http'
 }

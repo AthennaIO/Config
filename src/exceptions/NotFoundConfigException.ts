@@ -15,7 +15,7 @@ export class NotFoundConfigException extends Exception {
       status: 500,
       code: 'E_NOT_FOUND_CONFIG',
       message: `The configuration ${key} does not exist or the value is a hardcoded undefined.`,
-      help: `To solve this problem you can set a default value when trying to get your configuration or setting a value to your ${key} configuration.`,
+      help: `To solve this problem you can set a default value when trying to get your configuration or setting a value to your ${key} configuration.`
     })
   }
 }

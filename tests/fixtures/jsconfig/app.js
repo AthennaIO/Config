@@ -7,10 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Config } from '#src'
-
 export default {
-  // eslint-disable-next-line prettier/prettier
-  username: Config.get("app.name"),
-  env: Config.get('app.env'),
+  name: 'AthennaJS',
+  env: Env('NODE_ENV', 'test')
 }

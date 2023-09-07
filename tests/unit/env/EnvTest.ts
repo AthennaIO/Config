@@ -14,9 +14,9 @@ import { Test, BeforeAll, AfterAll, BeforeEach, Cleanup, AfterEach, type Context
 export default class EnvTest {
   @BeforeAll()
   public async beforeAll() {
-    await new File(Path.stubs('.env')).copy(Path.pwd('.env'))
-    await new File(Path.stubs('.env.other')).copy(Path.pwd('.env.other'))
-    await new File(Path.stubs('.env.testing')).copy(Path.pwd('.env.testing'))
+    await new File(Path.fixtures('.env')).copy(Path.pwd('.env'))
+    await new File(Path.fixtures('.env.other')).copy(Path.pwd('.env.other'))
+    await new File(Path.fixtures('.env.testing')).copy(Path.pwd('.env.testing'))
   }
 
   @AfterAll()
@@ -134,14 +134,14 @@ export default class EnvTest {
 
   @Test()
   public async shouldBeAbleToResolveAnyEnvFilePathWithoutDependingOnAPP_ENV({ assert }: Context) {
-    EnvHelper.resolveFilePath(Path.stubs('.env.path'))
+    EnvHelper.resolveFilePath(Path.fixtures('.env.path'))
 
     assert.equal(Env('ENV'), 'env.path')
   }
 
   @Test()
   public async shouldNotThrowErrorsWhenEnvFileDoesNotExist({ assert }: Context) {
-    assert.isUndefined(EnvHelper.resolveFilePath(Path.stubs('.env.not-found')))
+    assert.isUndefined(EnvHelper.resolveFilePath(Path.fixtures('.env.not-found')))
   }
 
   @Test()
@@ -157,7 +157,7 @@ export default class EnvTest {
 
   @Test()
   @Cleanup(async () => {
-    await new File(Path.stubs('.env')).copy(Path.pwd('.env'))
+    await new File(Path.fixtures('.env')).copy(Path.pwd('.env'))
   })
   public async shouldNotTryToLoadNodeEnvIfFileDoesNotExist({ assert }: Context) {
     await File.safeRemove(Path.pwd('.env'))
@@ -174,7 +174,7 @@ export default class EnvTest {
 
   @Test()
   @Cleanup(async () => {
-    await new File(Path.stubs('.env')).copy(Path.pwd('.env'))
+    await new File(Path.fixtures('.env')).copy(Path.pwd('.env'))
   })
   public async shouldNotTryToLoadNodeEnvIfEnvFileContentDoesNotHaveAPP_ENV({ assert }: Context) {
     const file = new File(Path.pwd('.env'))
@@ -194,7 +194,7 @@ export default class EnvTest {
 
   @Test()
   @Cleanup(async () => {
-    await new File(Path.stubs('.env')).copy(Path.pwd('.env'))
+    await new File(Path.fixtures('.env')).copy(Path.pwd('.env'))
   })
   public async shouldNotLoadNodeEnvIfTheValueOfEnvFileIsNotValid({ assert }: Context) {
     const file = new File(Path.pwd('.env'))

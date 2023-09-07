@@ -8,5 +8,5 @@
  */
 
 export default {
-  type: 'cli',
+  type: 'cli'
 }

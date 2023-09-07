@@ -14,7 +14,7 @@ import { NotFoundConfigException } from '#src/exceptions/NotFoundConfigException
 export default class ValueAnnotationTest {
   @BeforeEach()
   public async beforeEach() {
-    await Config.load(Path.stubs('config/app.ts'))
+    await Config.load(Path.fixtures('config/app.ts'))
   }
 
   @AfterEach()
@@ -24,7 +24,7 @@ export default class ValueAnnotationTest {
 
   @Test()
   public async shouldBeAbleToSetConfigurationValuesUsingValueAnnotation({ assert }: Context) {
-    const { AppService } = await import('#tests/stubs/classes/AppService')
+    const { AppService } = await import('#tests/fixtures/classes/AppService')
 
     const appService = new AppService()
 
@@ -34,12 +34,12 @@ export default class ValueAnnotationTest {
 
   @Test()
   public async shouldThrowAnExceptionIfTryingToLoadAConfigurationValueThatDoesNotExist({ assert }: Context) {
-    await assert.rejects(() => import('#tests/stubs/classes/ThrowNotFound'), NotFoundConfigException)
+    await assert.rejects(() => import('#tests/fixtures/classes/ThrowNotFound'), NotFoundConfigException)
   }
 
   @Test()
   public async shouldNotThrowExceptionIfDefaultValueIsSetWhenTryingToLoadAUndefinedConfiguration({ assert }: Context) {
-    const { DoesNotThrowNotFound } = await import('#tests/stubs/classes/DoesNotThrowNotFound')
+    const { DoesNotThrowNotFound } = await import('#tests/fixtures/classes/DoesNotThrowNotFound')
 
     const doesNotThrowNotFound = new DoesNotThrowNotFound()
 
@@ -49,9 +49,9 @@ export default class ValueAnnotationTest {
 
   @Test()
   public async shouldBeAbleToSetDifferentValuesToConfigurationsWithoutChangingTheOnesAlreadySetInClass({
-    assert,
+    assert
   }: Context) {
-    const { AppService } = await import('#tests/stubs/classes/AppService')
+    const { AppService } = await import('#tests/fixtures/classes/AppService')
 
     const appService = new AppService()
 
