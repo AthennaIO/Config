@@ -21,8 +21,8 @@
   "scripts": {
     "build": "node node_modules/@athenna/tsconfig/src/build.js",
     "lint:fix": "eslint \"{bin,src,tests}/**/*.ts\" --fix",
-    "test": "npm run --silent lint:fix && node --import=@athenna/tsconfig bin/test.ts",
-    "test:debug": "cross-env NODE_DEBUG=athenna:* node --inspect --import=@athenna/tsconfig bin/test.ts",
+    "test": "npm run --silent lint:fix && node --enable-source-maps --import=@athenna/tsconfig bin/test.ts",
+    "test:debug": "cross-env NODE_DEBUG=athenna:* node --inspect --enable-source-maps --import=@athenna/tsconfig bin/test.ts",
     "test:coverage": "c8 npm run --silent test"
   },
   "files": [
@@ -58,8 +58,8 @@
     "syntax-error": "^1.4.0"
   },
   "devDependencies": {
-    "@athenna/common": "^4.17.0",
-    "@athenna/test": "^4.10.0",
+    "@athenna/common": "^4.17.2",
+    "@athenna/test": "^4.11.0",
     "@athenna/tsconfig": "^4.8.2",
     "@types/lodash": "^4.14.191",
     "@types/syntax-error": "^1.4.2",
