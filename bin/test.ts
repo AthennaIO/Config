@@ -11,7 +11,6 @@ import { Runner } from '@athenna/test'
 
 await Runner.setTsEnv()
   .addAssertPlugin()
-  .addSpecReporter()
   .addPath('tests/unit/**/*.ts')
   .setCliArgs(process.argv.slice(2))
   .setGlobalTimeout(5000)
