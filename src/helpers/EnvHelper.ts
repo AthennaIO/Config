@@ -11,6 +11,7 @@ import dotenv from 'dotenv'
 
 import { Env } from '#src'
 import { debug } from '#src/debug'
+import { parseArgs } from 'node:util'
 import { File, Is, Path } from '@athenna/common'
 
 export class EnvHelper {
@@ -84,10 +85,10 @@ export class EnvHelper {
     }
 
     if (configurations.override) {
-      debug('Environment variables override is enabled.')
+      debug('environment variables override is enabled.')
     }
 
-    debug('Loading env file %s path.', configurations.path)
+    debug('loading env file %s path.', configurations.path)
 
     dotenv.config(configurations)
   }
@@ -122,29 +123,41 @@ export class EnvHelper {
    * from the .env file if exists in project root.
    */
   public static getAppEnv(lookupNodeEnv: boolean): string {
+    const envName = process.env.APP_ENV ? 'APP_ENV' : 'NODE_ENV'
     const appEnv = process.env.APP_ENV || process.env.NODE_ENV
 
     if (this.isDefinedEnv(appEnv)) {
       debug(
-        'Application environment defined by %s env variable.',
-        process.env.APP_ENV ? 'APP_ENV' : 'NODE_ENV'
+        'application environment defined by %s env variable with value %s.',
+        envName,
+        appEnv
       )
 
       return appEnv
     }
 
-    if (!lookupNodeEnv) {
+    const cliAppEnv = this.getCliEnvFlag()
+
+    if (this.isDefinedEnv(cliAppEnv)) {
       debug(
-        'Lookup of APP_ENV/NODE_ENV env variables are disabled, skipping it.'
+        'application environment defined by --env flag with value %s.',
+        cliAppEnv
       )
+
+      return cliAppEnv
+    }
+
+    if (!lookupNodeEnv) {
+      debug('lookup of %s env variables are disabled, skipping it.', envName)
 
       return null
     }
 
     if (!File.existsSync(Path.pwd('.env'))) {
       debug(
-        'Unable to found env file at application root: %s. Skipping APP_ENV/NODE_ENV lookup.',
-        Path.pwd('.env')
+        'unable to found env file at application root: %s. skipping %s lookup.',
+        Path.pwd('.env'),
+        envName
       )
 
       return null
@@ -154,8 +167,9 @@ export class EnvHelper {
 
     if (!content) {
       debug(
-        'File %s content is empty, Skipping APP_ENV/NODE_ENV lookup.',
-        Path.pwd('.env')
+        'file %s content is empty, skipping %s lookup.',
+        Path.pwd('.env'),
+        envName
       )
 
       return null
@@ -194,10 +208,9 @@ export class EnvHelper {
       process.env[envName] = serializedValue
 
       debug(
-        'Found %s env variable with value %s inside %s file, returning it as environment value.',
+        'found %s env variable with value %s inside file, returning it as environment value.',
         envName,
-        serializedValue,
-        Path.pwd(`.env.${serializedValue}`)
+        serializedValue
       )
 
       return process.env[envName]
@@ -210,11 +223,24 @@ export class EnvHelper {
    * Verify if some environment is defined ignoring.
    */
   public static isDefinedEnv(environment: string) {
-    return (
-      environment &&
-      environment !== '' &&
-      environment !== 'undefined' &&
-      environment !== 'production'
-    )
+    return environment && environment !== 'undefined'
+  }
+
+  /**
+   * Get the `--env` flag from process.argv if exists or
+   * return null.
+   */
+  public static getCliEnvFlag() {
+    const envFlag = parseArgs({
+      args: process.argv.slice(2),
+      strict: false,
+      options: { env: { type: 'string', multiple: false } }
+    })?.values?.env
+
+    if (!envFlag) {
+      return null
+    }
+
+    return envFlag
   }
 }
