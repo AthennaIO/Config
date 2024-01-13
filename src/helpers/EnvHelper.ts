@@ -123,6 +123,17 @@ export class EnvHelper {
    * from the .env file if exists in project root.
    */
   public static getAppEnv(lookupNodeEnv: boolean): string {
+    const cliAppEnv = this.getCliEnvFlag()
+
+    if (this.isDefinedEnv(cliAppEnv)) {
+      debug(
+        'application environment defined by --env flag with value %s.',
+        cliAppEnv
+      )
+
+      return cliAppEnv
+    }
+
     const envName = process.env.APP_ENV ? 'APP_ENV' : 'NODE_ENV'
     const appEnv = process.env.APP_ENV || process.env.NODE_ENV
 
@@ -134,17 +145,6 @@ export class EnvHelper {
       )
 
       return appEnv
-    }
-
-    const cliAppEnv = this.getCliEnvFlag()
-
-    if (this.isDefinedEnv(cliAppEnv)) {
-      debug(
-        'application environment defined by --env flag with value %s.',
-        cliAppEnv
-      )
-
-      return cliAppEnv
     }
 
     if (!lookupNodeEnv) {
