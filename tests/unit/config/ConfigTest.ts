@@ -8,13 +8,16 @@
  */
 
 import { sep } from 'node:path'
-import { File, Folder, Path } from '@athenna/common'
+import { File, Json, Folder, Path } from '@athenna/common'
 import { Test, Cleanup, BeforeEach, AfterEach, type Context } from '@athenna/test'
 import { RecursiveConfigException } from '#src/exceptions/RecursiveConfigException'
 import { NotSupportedKeyException } from '#src/exceptions/NotSupportedKeyException'
 import { NotValidArrayConfigException } from '#src/exceptions/NotValidArrayConfigException'
 
 export default class ConfigTest {
+  public env: any = Json.copy(process.env)
+  public argv: string[] = Json.copy(process.argv)
+
   @BeforeEach()
   public async beforeEach() {
     await Config.load(Path.fixtures('config/app.ts'))
@@ -24,6 +27,8 @@ export default class ConfigTest {
   @AfterEach()
   public async afterEach() {
     Config.clear()
+    process.env = this.env
+    process.argv = this.argv
     await Folder.safeRemove(Path.fixtures('recursive-copy'))
   }
 

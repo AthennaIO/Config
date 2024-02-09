@@ -1,6 +1,6 @@
 {
   "name": "@athenna/config",
-  "version": "4.13.0",
+  "version": "4.14.0",
   "description": "Cache and handle environment variables and config files of Athenna.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -53,13 +53,13 @@
     "#tests": "./tests/index.js"
   },
   "dependencies": {
-    "dotenv": "^16.3.1",
-    "magicast": "^0.3.2",
+    "dotenv": "^16.3.2",
+    "magicast": "^0.3.3",
     "syntax-error": "^1.4.0"
   },
   "devDependencies": {
-    "@athenna/common": "^4.27.0",
-    "@athenna/test": "^4.18.0",
+    "@athenna/common": "^4.32.0",
+    "@athenna/test": "^4.21.0",
     "@athenna/tsconfig": "^4.12.0",
     "@types/lodash": "^4.14.191",
     "@types/syntax-error": "^1.4.2",

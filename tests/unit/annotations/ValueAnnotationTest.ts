@@ -9,7 +9,6 @@
 
 import { Path } from '@athenna/common'
 import { Test, BeforeEach, AfterEach, type Context } from '@athenna/test'
-import { NotFoundConfigException } from '#src/exceptions/NotFoundConfigException'
 
 export default class ValueAnnotationTest {
   @BeforeEach()
@@ -33,18 +32,21 @@ export default class ValueAnnotationTest {
   }
 
   @Test()
-  public async shouldThrowAnExceptionIfTryingToLoadAConfigurationValueThatDoesNotExist({ assert }: Context) {
-    await assert.rejects(() => import('#tests/fixtures/classes/ThrowNotFound'), NotFoundConfigException)
+  public async shouldSetAsUndefinedIfTryingToLoadAConfigurationValueThatDoesNotExist({ assert }: Context) {
+    const { NotFoundConfig } = await import('#tests/fixtures/classes/NotFoundConfig')
+
+    const notFoundConfig = new NotFoundConfig()
+
+    assert.equal(notFoundConfig.undefined, undefined)
   }
 
   @Test()
-  public async shouldNotThrowExceptionIfDefaultValueIsSetWhenTryingToLoadAUndefinedConfiguration({ assert }: Context) {
-    const { DoesNotThrowNotFound } = await import('#tests/fixtures/classes/DoesNotThrowNotFound')
+  public async shouldTheDefaultValueIfTryingToLoadAConfigurationValueThatDoesNotExist({ assert }: Context) {
+    const { NotFoundConfig } = await import('#tests/fixtures/classes/NotFoundConfig')
 
-    const doesNotThrowNotFound = new DoesNotThrowNotFound()
+    const notFoundConfig = new NotFoundConfig()
 
-    assert.equal(doesNotThrowNotFound.defined, null)
-    assert.equal(doesNotThrowNotFound.definedApp, 'Athenna')
+    assert.equal(notFoundConfig.defined, 'Athenna')
   }
 
   @Test()
