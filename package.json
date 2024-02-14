@@ -53,7 +53,7 @@
     "#tests": "./tests/index.js"
   },
   "dependencies": {
-    "dotenv": "^16.3.2",
+    "dotenv": "^16.4.0",
     "magicast": "^0.3.3",
     "syntax-error": "^1.4.0"
   },
