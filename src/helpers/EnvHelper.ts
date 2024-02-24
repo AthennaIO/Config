@@ -73,11 +73,14 @@ export class EnvHelper {
    * Resolve the env file according to APP_ENV or NODE_ENV
    * environment variable.
    */
-  public static resolveFile(lookupNodeEnv = false): void {
+  public static resolveFile(
+    lookupNodeEnv = false,
+    override = this.isToOverrideEnvs()
+  ): void {
     const environment = this.getAppEnv(lookupNodeEnv)
     const configurations = {
       path: Path.pwd('.env'),
-      override: this.isToOverrideEnvs()
+      override
     }
 
     if (environment) {
