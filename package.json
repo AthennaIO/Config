@@ -1,6 +1,6 @@
 {
   "name": "@athenna/config",
-  "version": "4.17.0",
+  "version": "4.18.0",
   "description": "Cache and handle environment variables and config files of Athenna.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
