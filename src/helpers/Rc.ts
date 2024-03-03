@@ -9,7 +9,7 @@
 
 import { debug } from '#src/debug'
 import { loadFile, writeFile } from 'magicast'
-import { File, Is, ObjectBuilder } from '@athenna/common'
+import { Is, File, Path, ObjectBuilder } from '@athenna/common'
 
 export class Rc {
   public static file: File

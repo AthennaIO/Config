@@ -9,9 +9,12 @@
 
 import dotenv from 'dotenv'
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { parseArgs } from 'node:util'
+
 import { Env } from '#src'
 import { debug } from '#src/debug'
-import { parseArgs } from 'node:util'
 import { File, Is, Path } from '@athenna/common'
 
 export class EnvHelper {
