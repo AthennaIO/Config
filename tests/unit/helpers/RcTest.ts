@@ -250,4 +250,24 @@ export default class RcTest {
       providers: ['value', 'value', 'value']
     })
   }
+
+  @Test()
+  public async shouldBeAbleToReloadTheRcFile({ assert }: Context) {
+    const path = Path.fixtures('.athennarc.json')
+
+    await Rc.setFile(path)
+
+    const rcFile = new File(path)
+    const rcFileContent = await rcFile.getContentAsJson()
+
+    rcFileContent.providers = ['#src/providers/AppProvider']
+
+    await rcFile.setContent(JSON.stringify(rcFileContent))
+
+    await Rc.reload().then(() => Rc.pushTo('providers', '#src/providers/DbProvider').save())
+
+    const rcFileContentUpdated = await Rc.file.getContentAsJson()
+
+    assert.deepEqual(rcFileContentUpdated.providers, ['#src/providers/AppProvider', '#src/providers/DbProvider'])
+  }
 }
