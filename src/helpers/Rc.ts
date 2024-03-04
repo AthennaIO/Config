@@ -16,6 +16,23 @@ export class Rc {
   public static content: ObjectBuilder
 
   /**
+   * Reload the Rc file and content. Useful when
+   * changes has been made in the Rc file by external
+   * tools.
+   */
+  public static async reload(): Promise<typeof Rc> {
+    if (!this.file) {
+      debug('RC file still not set, ignoring reload call')
+
+      return this
+    }
+
+    debug('Reloading RC file: %s', this.file.path)
+
+    return this.setFile(this.file.path)
+  }
+
+  /**
    * Set the RC file that the Rc class should work with.
    */
   public static async setFile(
@@ -120,6 +137,8 @@ export class Rc {
         } as any
       })
 
+      await this.reload()
+
       return
     }
 
@@ -130,12 +149,16 @@ export class Rc {
 
       await this.file.setContent(this.toStringJson(packageJson))
 
+      await this.reload()
+
       return
     }
 
     const athennaRcJson = this.content.get()
 
     await this.file.setContent(this.toStringJson(athennaRcJson))
+
+    await this.reload()
   }
 
   /**
