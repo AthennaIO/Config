@@ -27,8 +27,8 @@ export default class ConfigTest {
   @AfterEach()
   public async afterEach() {
     Config.clear()
-    process.env = this.env
-    process.argv = this.argv
+    process.env = Json.copy(this.env)
+    process.argv = Json.copy(this.argv)
     await Folder.safeRemove(Path.fixtures('recursive-copy'))
   }
 
