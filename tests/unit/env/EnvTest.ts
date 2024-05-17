@@ -31,8 +31,8 @@ export default class EnvTest {
 
   @AfterEach()
   public async afterEach() {
-    process.env = this.env
-    process.argv = this.argv
+    process.env = Json.copy(this.env)
+    process.argv = Json.copy(this.argv)
   }
 
   @Test()
