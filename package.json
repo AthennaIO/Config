@@ -1,6 +1,6 @@
 {
   "name": "@athenna/config",
-  "version": "4.25.0",
+  "version": "4.26.0",
   "description": "Cache and handle environment variables and config files of Athenna.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -58,9 +58,9 @@
     "syntax-error": "^1.4.0"
   },
   "devDependencies": {
-    "@athenna/common": "^4.44.0",
-    "@athenna/test": "^4.29.0",
-    "@athenna/tsconfig": "^4.18.0",
+    "@athenna/common": "^4.45.0",
+    "@athenna/test": "^4.30.0",
+    "@athenna/tsconfig": "^4.19.0",
     "@types/lodash": "^4.17.7",
     "@types/syntax-error": "^1.4.5",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
