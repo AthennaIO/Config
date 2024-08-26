@@ -247,6 +247,6 @@ export class EnvHelper {
       return null
     }
 
-    return envFlag
+    return envFlag as string
   }
 }

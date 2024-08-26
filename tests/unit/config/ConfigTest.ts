@@ -29,7 +29,6 @@ export default class ConfigTest {
     Config.clear()
     process.env = Json.copy(this.env)
     process.argv = Json.copy(this.argv)
-    await Folder.safeRemove(Path.fixtures('recursive-copy'))
   }
 
   @Test()
@@ -189,15 +188,15 @@ export default class ConfigTest {
 
   @Test()
   public async shouldThrownAnErrorWhenLoadingAConfigurationFileThatRecursivelyLoadsOther({ assert }: Context) {
-    const useCase = async () => await Config.load(Path.fixtures('config/recursiveOne.ts'))
+    const useCase = async () => await Config.load(Path.fixtures('recursive-config/recursiveOne.ts'))
 
     await assert.rejects(useCase, RecursiveConfigException)
   }
 
   @Test()
   public async shouldNotLoadMapAndDTSFiles({ assert }: Context) {
-    await Config.load(Path.config('app.d.ts'))
-    await Config.load(Path.config('app.js.map'))
+    await Config.load(Path.fixtures('config/app.d.ts'))
+    await Config.load(Path.fixtures('config/app.js.map'))
 
     assert.equal(Config.get('app.name'), 'Athenna')
   }
@@ -245,7 +244,7 @@ export default class ConfigTest {
   public async shouldBeAbleToLoadAllConfigurationPathSafely({ assert }: Context) {
     Config.set('app', {})
 
-    await Config.loadAll(Path.config(), true)
+    await Config.loadAll(Path.fixtures('config'), true)
 
     assert.deepEqual(Config.get('app'), {})
   }
@@ -255,7 +254,7 @@ export default class ConfigTest {
   public async shouldBeAbleToLoadASingleFileInLoadAllMethod({ assert }: Context) {
     Config.set('app', {})
 
-    await Config.loadAll(Path.config('app.ts'), true)
+    await Config.loadAll(Path.fixtures('config/app.ts'), true)
 
     assert.deepEqual(Config.get('app'), {})
   }
@@ -283,6 +282,9 @@ export default class ConfigTest {
   }
 
   @Test()
+  @Cleanup(async () => {
+    await Folder.safeRemove(Path.fixtures('recursive-copy'))
+  })
   public async shouldBeAbleToRewriteTheConfigFileAndSaveModifications({ assert }: Context) {
     const folder = await new Folder(Path.fixtures('recursive')).copy(Path.fixtures('recursive-copy'), {
       withContent: true
@@ -308,6 +310,9 @@ export default class ConfigTest {
   }
 
   @Test()
+  @Cleanup(async () => {
+    await Folder.safeRemove(Path.fixtures('recursive-copy'))
+  })
   public async shouldThrowAnExceptionIfCallingRewriteMethodWithABadKey({ assert }: Context) {
     const folder = await new Folder(Path.fixtures('recursive')).copy(Path.fixtures('recursive-copy'), {
       withContent: true
@@ -321,6 +326,9 @@ export default class ConfigTest {
   }
 
   @Test()
+  @Cleanup(async () => {
+    await Folder.safeRemove(Path.fixtures('recursive-copy'))
+  })
   public async shouldThrowAnExceptionIfCallingRewriteMethodWithANotFoundKey({ assert }: Context) {
     const folder = await new Folder(Path.fixtures('recursive')).copy(Path.fixtures('recursive-copy'), {
       withContent: true
