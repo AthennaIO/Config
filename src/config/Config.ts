@@ -12,7 +12,6 @@ import {
   File,
   Json,
   Path,
-  Exec,
   Module,
   Macroable,
   ObjectBuilder
@@ -211,7 +210,7 @@ export class Config extends Macroable {
 
     this.fatherConfigPath = path
 
-    await Exec.concurrently(files, file =>
+    await files.athenna.concurrently(file =>
       safe ? this.safeLoad(file.path) : this.load(file.path)
     )
   }
