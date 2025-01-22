@@ -8,13 +8,14 @@
  */
 
 import {
+  Is,
   File,
   Json,
   Path,
-  ObjectBuilder,
   Exec,
   Module,
-  Is
+  Macroable,
+  ObjectBuilder
 } from '@athenna/common'
 import { debug } from '#src/debug'
 import { loadFile, writeFile } from 'magicast'
@@ -23,7 +24,7 @@ import { RecursiveConfigException } from '#src/exceptions/RecursiveConfigExcepti
 import { NotSupportedKeyException } from '#src/exceptions/NotSupportedKeyException'
 import { NotValidArrayConfigException } from '#src/exceptions/NotValidArrayConfigException'
 
-export class Config {
+export class Config extends Macroable {
   /**
    * Object to save all the configurations.
    */
