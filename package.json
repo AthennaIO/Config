@@ -1,6 +1,6 @@
 {
   "name": "@athenna/config",
-  "version": "5.4.0",
+  "version": "5.5.0",
   "description": "Cache and handle environment variables and config files of Athenna.",
   "license": "MIT",
   "author": "João Lenon <lenon@athenna.io>",
@@ -58,7 +58,7 @@
     "syntax-error": "^1.4.0"
   },
   "devDependencies": {
-    "@athenna/common": "^5.14.0",
+    "@athenna/common": "^5.26.0",
     "@athenna/test": "^5.5.0",
     "@athenna/tsconfig": "^5.0.0",
     "@types/lodash": "^4.17.20",
