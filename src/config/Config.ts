@@ -264,7 +264,7 @@ export class Config extends Macroable {
       return
     }
 
-    if (base.includes('.ts') && Env('IS_TS') === false) {
+    if (base.includes('.ts') && (Env('IS_TS') === false || !Is.Deno())) {
       debug(
         'Configuration file %s being skipped since its a TypeScript file and the application is not running in a TypeScript environment.',
         base
